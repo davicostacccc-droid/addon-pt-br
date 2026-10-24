@@ -20,6 +20,10 @@ Não é uma tradução completa do WoW. O pacote inicial 0.1.0 continha apenas a
 
 O script `scripts/Instalar.ps1` original usa a saída antiga `dist/release`; para o teste atual, utilize o ZIP indicado acima. Nenhum script foi executado contra sua instalação do WoW.
 
+## Bases e cobertura
+
+A [análise consolidada das fontes](docs/FONTES-CONSOLIDADAS.md) reúne AzerothCore, Questie, WotLKDB, Cavern of Time, traduções e áudios. O cruzamento local identificou 2.952 IDs com candidatos a texto e alguma gravação; eles ainda exigem revisão e não representam cobertura instalada. A ferramenta 	ools/analyze_source_coverage.py reproduz o inventário sem executar código externo.
+
 ## Comandos no jogo
 
 | Comando | Ação |

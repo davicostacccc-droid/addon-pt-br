@@ -1,0 +1,157 @@
+{
+  "kind": "reference-coverage-not-playable",
+  "summary": {
+    "english_quest_records": 9464,
+    "locale_records": 7872,
+    "locale_nonempty_details": 6780,
+    "questie_quest_ids": 9086,
+    "questie_ptbr_ids": 8462,
+    "questie_ptbr_overlap": 8276,
+    "audio_quest_ids": 3245,
+    "audio_phase_counts": {
+      "progress": 1232,
+      "complete": 1987,
+      "accept": 3115
+    },
+    "english_with_locale_details_and_questie_id": 6735,
+    "also_has_any_indexed_audio": 2952,
+    "also_has_all_three_audio_phases": 1134,
+    "warning": "ID intersection only: text, language, counts, NPC, phase, audio wording and reuse terms still require review."
+  },
+  "valley_of_trials_reference_ids": [
+    787,
+    788,
+    789,
+    790,
+    792,
+    794,
+    804,
+    805,
+    4402,
+    4641,
+    5441,
+    5843,
+    6394
+  ],
+  "valley_of_trials": [
+    {
+      "quest_id": 787,
+      "questie": true,
+      "locale_details": true,
+      "audio_phases": []
+    },
+    {
+      "quest_id": 788,
+      "questie": true,
+      "locale_details": true,
+      "audio_phases": [
+        "accept",
+        "complete"
+      ]
+    },
+    {
+      "quest_id": 789,
+      "questie": true,
+      "locale_details": true,
+      "audio_phases": [
+        "accept",
+        "complete",
+        "progress"
+      ]
+    },
+    {
+      "quest_id": 790,
+      "questie": true,
+      "locale_details": true,
+      "audio_phases": [
+        "accept",
+        "complete",
+        "progress"
+      ]
+    },
+    {
+      "quest_id": 792,
+      "questie": true,
+      "locale_details": true,
+      "audio_phases": [
+        "accept",
+        "complete"
+      ]
+    },
+    {
+      "quest_id": 794,
+      "questie": true,
+      "locale_details": true,
+      "audio_phases": [
+        "accept",
+        "complete",
+        "progress"
+      ]
+    },
+    {
+      "quest_id": 804,
+      "questie": true,
+      "locale_details": true,
+      "audio_phases": [
+        "accept",
+        "complete"
+      ]
+    },
+    {
+      "quest_id": 805,
+      "questie": true,
+      "locale_details": true,
+      "audio_phases": [
+        "accept",
+        "complete"
+      ]
+    },
+    {
+      "quest_id": 4402,
+      "questie": true,
+      "locale_details": true,
+      "audio_phases": [
+        "accept",
+        "complete",
+        "progress"
+      ]
+    },
+    {
+      "quest_id": 4641,
+      "questie": true,
+      "locale_details": true,
+      "audio_phases": [
+        "accept",
+        "complete"
+      ]
+    },
+    {
+      "quest_id": 5441,
+      "questie": true,
+      "locale_details": true,
+      "audio_phases": [
+        "accept",
+        "complete",
+        "progress"
+      ]
+    },
+    {
+      "quest_id": 5843,
+      "questie": true,
+      "locale_details": true,
+      "audio_phases": [
+        "accept"
+      ]
+    },
+    {
+      "quest_id": 6394,
+      "questie": true,
+      "locale_details": true,
+      "audio_phases": [
+        "accept",
+        "complete",
+        "progress"
+      ]
+    }
+  ]
+}
