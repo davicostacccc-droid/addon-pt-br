@@ -1,0 +1,16 @@
+{
+  "version": "0.6.0-beta2",
+  "content_version": "0.5.0-beta1",
+  "pagination_checks": 13712,
+  "event_checks": 206,
+  "audio_files_preserved": 6353,
+  "catalog_and_manifest_unchanged": true,
+  "zip_verified": true,
+  "zip_sha256": "7ace12534d091a8a5120009b86124b5be727f6e63020f49f12abd37598fa0162",
+  "zip_bytes": 809317583,
+  "in_game": "pending player visual confirmation",
+  "unit_tests": 59,
+  "quests_with_any_phase_combined": 3696,
+  "content_coverage_unchanged": true,
+  "visual_layout_check": "Offline layout inspection only; no in-game visual certification"
+}

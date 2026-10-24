@@ -11,12 +11,12 @@ SlashCmdList = {}
 local templates = { UIPanelButtonTemplate = true, UIPanelScrollFrameTemplate = true,
     InterfaceOptionsCheckButtonTemplate = true, OptionsSliderTemplate = true }
 local function Widget(kind, name)
-    local w = { kind = kind, name = name, scripts = {}, events = {}, shown = false }
+    local w = { kind = kind, name = name, scripts = {}, events = {}, shown = false, children = {} }
     function w:SetScript(event, fn) self.scripts[event] = fn end
     function w:RegisterEvent(event) self.events[event] = true end
     function w:GetName() return self.name end
-    function w:Show() self.shown = true; if self.scripts.OnShow then self.scripts.OnShow(self) end end
-    function w:Hide() self.shown = false end
+    function w:Show() self.shown = true; self.explicitHidden = false; if self.scripts.OnShow then self.scripts.OnShow(self) end end
+    function w:Hide() self.shown = false; self.explicitHidden = true end
     function w:IsShown() return self.shown end
     function w:SetText(text) self.text = text end
     function w:GetText() return self.text end
@@ -26,15 +26,23 @@ local function Widget(kind, name)
     function w:SetValue(value) self.value = value; if self.scripts.OnValueChanged then self.scripts.OnValueChanged(self, value) end end
     function w:SetBackdrop(value) self.backdrop = value end
     function w:GetBackdrop() return self.backdrop end
-    function w:CreateFontString() return Widget('FontString') end
-    function w:CreateTexture() return Widget('Texture') end
+    function w:CreateFontString() local c = Widget('FontString'); c.parent = self; table.insert(self.children,c); return c end
+    function w:CreateTexture() local c = Widget('Texture'); c.parent = self; table.insert(self.children,c); return c end
     function w:SetWidth(value) self.width = value end
     function w:GetWidth() return self.width or 1280 end
+    function w:GetHeight() return self.height or 720 end
     function w:SetHeight(value) self.height = value end
     function w:SetAlpha(value) self.alpha = value end
     function w:GetAlpha() return self.alpha or 1 end
     function w:SetScale(value) self.scale = value end
     function w:SetTexture(value) self.texture = value end
+    function w:SetFont(path, size, flags) self.font = {path, size, flags}; return true end
+    function w:SetTextColor(...) self.textColor = {...} end
+    function w:SetVertexColor(...) self.vertexColor = {...} end
+    function w:SetPoint(...) self.points = self.points or {}; table.insert(self.points, {...}) end
+    function w:ClearAllPoints() self.points = {} end
+    function w:SetJustifyH(value) self.justifyH = value end
+    function w:SetJustifyV(value) self.justifyV = value end
     function w:SetBackdropColor(...) self.color = {...} end
     function w:SetBackdropBorderColor(...) self.borderColor = {...} end
     function w:SetStatusBarTexture(value) assert(self.kind == 'StatusBar'); self.texture = value end
@@ -53,10 +61,10 @@ local function Widget(kind, name)
     end
     -- These are ordinary legacy frame/font/editbox methods. Do not absorb
     -- arbitrary unknown methods: a mistaken modern method should fail tests.
-    for _, method in ipairs({ 'SetPoint', 'SetAllPoints', 'SetFrameStrata', 'EnableMouse',
-        'SetMovable', 'RegisterForDrag', 'StartMoving', 'StopMovingOrSizing', 'SetJustifyH',
+    for _, method in ipairs({ 'SetAllPoints', 'SetFrameStrata', 'EnableMouse',
+        'SetMovable', 'RegisterForDrag', 'StartMoving', 'StopMovingOrSizing',
         'SetScrollChild', 'SetVerticalScroll', 'SetMinMaxValues', 'SetValueStep', 'SetMultiLine',
-        'SetFontObject', 'SetAutoFocus', 'SetMaxLetters', 'SetFocus', 'HighlightText', 'ClearAllPoints' }) do
+        'SetFontObject', 'SetAutoFocus', 'SetMaxLetters', 'SetFocus', 'HighlightText' }) do
         w[method] = function() end
     end
     return w
@@ -67,6 +75,8 @@ function CreateFrame(kind, name, parent, template)
     if kind == 'PlayerModel' and _modelUnsupported then error('Unsupported PlayerModel') end
     if template then assert(templates[template], 'Non-legacy template: ' .. template) end
     local w = Widget(kind, name)
+    w.parent = parent
+    if parent and parent.children then table.insert(parent.children,w) end
     table.insert(_frames, w)
     if name then
         _G[name] = w

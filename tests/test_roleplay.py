@@ -10,7 +10,7 @@ class RoleplayTests(unittest.TestCase):
         self.lua = LuaRuntime(unpack_returned_tuples=True)
         self.lua.execute((ROOT/'tests/wow_stub.lua').read_text(encoding='utf-8'))
         self.lua.execute(before)
-        for name in ('Core.lua','Pack.lua','UI.lua','Roleplay.lua','Events.lua'):
+        for name in ('Core.lua','Pack.lua','Theme.lua','UI.lua','Roleplay.lua','Events.lua'):
             self.lua.execute((ROOT/'addon/AzerothVoz'/name).read_text(encoding='utf-8'))
         self.lua.execute("Emit('ADDON_LOADED','AzerothVoz')")
         self.lua.execute("""
@@ -104,6 +104,67 @@ class RoleplayTests(unittest.TestCase):
             Emit('QUEST_DETAIL'); Tick(0.1); Tick(0.1)
             assert(AzerothVoz.current~=before)
             assert(AzerothVoz.current.speaker.guid==_guid and AzerothVoz.roleplay.modelReady)
+        """)
+
+    def test_pages_preserve_utf8_and_every_character(self):
+        self.setup_ui()
+        paginate = self.lua.eval('AzerothVoz.RoleplayPages')
+        for text in ('', 'Olá, campeão!\n\n' * 80, 'á' * 700, 'a ' + 'é' * 756, 'Uma história com ação e emoção. ' * 60):
+            pages = paginate(text)
+            values = [pages[i] for i in range(1, len(pages) + 1)]
+            self.assertEqual(''.join(values), text)
+            self.assertTrue(all(len(page) <= 250 for page in values))
+
+    def test_auto_pages_manual_reading_objectives_and_replay(self):
+        self.setup_ui()
+        self.lua.globals()._long = ('Uma história com ação e emoção. ' * 70)
+        self.run_lua("""
+            local a=AzerothVoz
+            a.quests[10].QUEST_DETAIL.translation=_long
+            a.quests[10].QUEST_DETAIL.objectives='Encontre 8 aliados.'
+            Emit('QUEST_DETAIL'); Tick(0.1); Tick(0.1)
+            local f=a.roleplay
+            assert(#f.pages>2 and f.page==1)
+            Tick(4); assert(f.page>1)
+            f.previousButton.scripts.OnClick(); local manual=f.page
+            Tick(2); assert(f.manualPage and f.page==manual)
+            f.autoButton.scripts.OnClick(); Tick(0.1); assert(not f.manualPage and f.page>=manual)
+            f.objectivesButton.scripts.OnClick(); assert(f.inObjectives and f.text:GetText()=='Encontre 8 aliados.')
+            f.autoButton.scripts.OnClick(); Tick(0.1); assert(not f.inObjectives and not f.manualPage)
+            f.repeatButton.scripts.OnClick(); assert(f.page==1 and not f.manualPage)
+            Tick(11); assert(f.page==#f.pages and f.progress.value==1)
+        """)
+
+    def test_scene_scale_compensates_ui_scale_and_reset_centers(self):
+        self.setup_ui()
+        self.run_lua("""
+            UIParent:SetWidth(1920); UIParent:SetHeight(1080); AzerothVoz.CenterRoleplay()
+            local normal=AzerothVoz.roleplay.scale
+            UIParent:SetWidth(2560); UIParent:SetHeight(1440); AzerothVoz.CenterRoleplay()
+            assert(math.abs(AzerothVoz.roleplay.scale*0.75-normal)<0.001)
+            AzerothVoz.roleplay:SetPoint('LEFT',0,0)
+            SlashCmdList.AZEROTHVOZ('centralizar')
+            assert(#AzerothVoz.roleplay.points==1 and AzerothVoz.roleplay.points[1][1]=='CENTER')
+        """)
+
+    def test_modern_settings_toggles_control_voice_and_mode(self):
+        self.setup_ui()
+        self.run_lua("""
+            Emit('QUEST_DETAIL'); Tick(0.1)
+            AzerothVoz_voice.scripts.OnClick(AzerothVoz_voice)
+            assert(not AzerothVoz.db.voice and not AzerothVoz.playing)
+            AzerothVoz_roleplay.scripts.OnClick(AzerothVoz_roleplay)
+            assert(not AzerothVoz.db.roleplay and not AzerothVoz.roleplay:IsShown())
+        """)
+
+    def test_settings_open_outside_small_legacy_options_container(self):
+        self.setup_ui()
+        self.run_lua("""
+            assert(not AzerothVoz.settings:IsShown())
+            SlashCmdList.AZEROTHVOZ('')
+            assert(AzerothVoz.settings:IsShown() and AzerothVoz.options~=AzerothVoz.settings)
+            assert(AzerothVoz.settings.height==590 and AzerothVoz.settings.width==550)
+            assert(AzerothVoz.settings.scale>0)
         """)
 
 

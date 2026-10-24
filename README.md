@@ -1,6 +1,8 @@
-# AzerothVoz PT-BR — 0.5.0-beta1 Northrend e Roleplay
+# AzerothVoz PT-BR — 0.6.0-beta2 Cena de diálogo
 
-**Beta local:** `dist/AzerothVoz-0.5.0-beta1-Northrend-Roleplay-12340.zip`. Amplia a cobertura de Northrend preservando Kalimdor, com traduções importadas experimentalmente e narração local. Acrescenta uma apresentação central opcional com modelo 3D do interlocutor quando disponível, texto rolável, entrada suave e controles. Não cobre 100% das missões ou de todas as etapas. [Instalação e teste](docs/BETA-NORTHREND-RP.md). A versão ainda aguarda confirmação no cliente; a beta Kalimdor anterior continua preservada em `dist/AzerothVoz-0.4.0-beta1-Kalimdor-12340.zip`.
+**Beta local:** `dist/AzerothVoz-0.6.0-beta2-Cinema-12340.zip`. Redesenha o addon com uma cena maior, tipografia própria, trechos de diálogo, controles próprios e painel de configurações independente. Preserva integralmente os textos e áudios da 0.5.0, com Kalimdor e Northrend. [Instalação e teste visual](docs/BETA-VISUAL-0.6.0.md). A nova aparência ainda aguarda confirmação no cliente. As versões anteriores continuam preservadas em dist/.
+
+O avanço automático de trechos usa uma estimativa pela duração do áudio; há navegação manual e retorno ao modo automático. Objetivos ficam separados da fala. `/avoz` abre o painel de configurações e `/avoz centralizar` reposiciona a cena. Passaram 59 testes, 13.712 verificações de paginação e 206 cenários de interface; os 6.353 MP3s foram preservados por hash. Veja o [resumo de verificação 0.6.0](data/beta-cinema-0.6.0-summary.json).
 
 As contagens regionais e combinadas estão em `COBERTURA.json` no pacote; cobertura não certifica a exatidão de cada tradução. A confirmação do jogador das versões anteriores não valida a interface 3D nova. A [análise dos guias Zygor/RestedXP e APIs antigas](docs/GUIAS-E-ROLEPLAY.md) explica as referências consultadas. O [resumo da beta Kalimdor anterior](data/beta-kalimdor-0.4.0-summary.json) continua disponível para comparação.
 
@@ -12,10 +14,10 @@ Tradução e narração para **WoW original 3.3.5a, build 12340**. O addon usa t
 
 Não é uma tradução completa do WoW. O pacote inicial 0.1.0 continha apenas a demonstração e uma saudação de McBride; a atualização Gornek acrescentou a fala capturada pelo jogador. Os procedimentos de geração básica abaixo continuam disponíveis; o novo recorte Durotar usa fontes e ferramentas adicionais descritas em `docs/INTEGRACAO-PACOTE-PTBR.md`.
 
-## Teste rápido: beta Northrend e Roleplay
+## Teste rápido: nova apresentação
 
 1. Feche o WoW completamente.
-2. Extraia `dist/AzerothVoz-0.5.0-beta1-Northrend-Roleplay-12340.zip`. Guarde uma cópia da pasta anterior antes de substituir **AzerothVoz** em `SuaPastaWoW/Interface/AddOns/`.
+2. Extraia `dist/AzerothVoz-0.6.0-beta2-Cinema-12340.zip`. Guarde uma cópia da pasta anterior antes de substituir **AzerothVoz** em `SuaPastaWoW/Interface/AddOns/`.
 3. O caminho final precisa ser `Interface/AddOns/AzerothVoz/AzerothVoz.toc`.
 4. Na seleção de personagens, ative AzerothVoz. Para o primeiro teste, desative outros addons de tradução/voz para evitar duas narrações ou disputa pelos textos.
 5. Entre no jogo e digite `/avoz demo`. Uma janela deve exibir a demonstração em português e a voz deve tocar. É um texto demonstrativo criado para este projeto.
@@ -30,11 +32,14 @@ A [análise consolidada das fontes](docs/FONTES-CONSOLIDADAS.md) reúne AzerothC
 
 A beta usa `tools/prepare_kalimdor_beta.py --region northrend` para selecionar e filtrar os candidatos locais, `tools/build_kalimdor_beta.py` com versão/região e pacote anterior para sintetizar com cache, e `tools/verify_kalimdor_beta.py --roleplay` para validar a entrega e criar o ZIP. O leitor `tools/read_lua_data.py` aceita somente tabelas literais; não executa os addons externos. Os comandos de geração básica abaixo continuam separados desse fluxo experimental.
 
+A atualização de interface 0.6.0 usa `tools/build_visual_update.py` sobre o pacote local 0.5.0. Ela mantém Pack.lua, manifesto e MP3s, valida a paginação e os eventos da interface, e gera uma saída nova. Não sintetiza novamente as falas nem modifica a instalação do jogo.
+
 ## Comandos no jogo
 
 | Comando | Ação |
 |---|---|
-| `/avoz` | Abre configurações em Interface |
+| `/avoz` | Abre o painel próprio de configurações |
+| `/avoz centralizar` | Reposiciona e ajusta o tamanho da cena à interface atual |
 | `/avoz cobertura` | Informa a cobertura parcial do pacote instalado |
 | `/avoz rp on` / `/avoz rp off` | Ativa/desativa a moldura central de roleplay |
 | `/avoz modelo on` / `/avoz modelo off` | Ativa/desativa o modelo 3D da moldura |

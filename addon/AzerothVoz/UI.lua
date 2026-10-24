@@ -1,88 +1,108 @@
 local A = AzerothVoz
+local T = A.Theme
 
 local function Button(parent, text, x, callback)
-    local b = CreateFrame('Button', nil, parent, 'UIPanelButtonTemplate')
-    b:SetWidth(90); b:SetHeight(23); b:SetPoint('BOTTOMLEFT', x, 12)
-    b:SetText(text); b:SetScript('OnClick', callback)
+    local b = T.Button(parent, text, 94, callback)
+    b:SetPoint('BOTTOMLEFT', x, 12)
     return b
 end
 
 function A.CreateUI()
     local f = CreateFrame('Frame', 'AzerothVozReader', UIParent)
     A.reader = f
-    f:SetWidth(370); f:SetHeight(330); f:SetPoint('CENTER', 320, 0)
+    f:SetWidth(560); f:SetHeight(430); f:SetPoint('CENTER', 320, 0)
     f:SetFrameStrata('DIALOG'); f:EnableMouse(true); f:SetMovable(true)
     f:RegisterForDrag('LeftButton')
     f:SetScript('OnDragStart', function(self) self:StartMoving() end)
     f:SetScript('OnDragStop', function(self) self:StopMovingOrSizing() end)
-    f:SetBackdrop({ bgFile = 'Interface\\DialogFrame\\UI-DialogBox-Background',
-        edgeFile = 'Interface\\DialogFrame\\UI-DialogBox-Border', tile = true,
-        tileSize = 32, edgeSize = 32, insets = { left = 10, right = 10, top = 10, bottom = 10 } })
-    f.heading = f:CreateFontString(nil, 'OVERLAY', 'GameFontNormalLarge')
-    f.heading:SetPoint('TOPLEFT', 20, -20); f.heading:SetWidth(320)
+    T.Surface(f)
+    f.heading = T.Label(f, 26)
+    f.heading:SetPoint('TOPLEFT', 24, -24); f.heading:SetWidth(490)
     local scroll = CreateFrame('ScrollFrame', 'AzerothVozScroll', f, 'UIPanelScrollFrameTemplate')
-    scroll:SetPoint('TOPLEFT', 20, -60); scroll:SetPoint('BOTTOMRIGHT', -35, 45)
-    local body = CreateFrame('Frame', nil, scroll); body:SetWidth(310); body:SetHeight(1)
+    scroll:SetPoint('TOPLEFT', 24, -70); scroll:SetPoint('BOTTOMRIGHT', -42, 56)
+    local body = CreateFrame('Frame', nil, scroll); body:SetWidth(480); body:SetHeight(1)
     scroll:SetScrollChild(body)
-    f.text = body:CreateFontString(nil, 'OVERLAY', 'GameFontHighlight')
-    f.text:SetPoint('TOPLEFT'); f.text:SetWidth(305); f.text:SetJustifyH('LEFT')
+    f.text = T.Label(body, 20)
+    f.text:SetPoint('TOPLEFT'); f.text:SetWidth(472)
     f.body, f.scroll = body, scroll
     Button(f, 'Repetir', 15, function() A.Play(A.current and A.current.record) end)
-    Button(f, 'Parar', 110, A.Stop)
-    Button(f, 'Fechar', 205, function() A.Stop(); f:Hide() end)
+    Button(f, 'Parar', 120, A.Stop)
+    Button(f, 'Fechar', 225, function() A.Stop(); f:Hide() end)
     f:Hide()
 
     local controls = CreateFrame('Frame', 'AzerothVozControls', UIParent)
     A.controls = controls
-    controls:SetWidth(200); controls:SetHeight(44)
-    controls:SetFrameStrata('DIALOG'); controls:SetBackdrop(f:GetBackdrop())
+    controls:SetWidth(220); controls:SetHeight(56)
+    controls:SetFrameStrata('DIALOG'); T.Surface(controls)
     Button(controls, 'Repetir', 5, function() A.Play(A.current and A.current.record) end)
-    Button(controls, 'Parar', 100, A.Stop)
+    Button(controls, 'Parar', 110, A.Stop)
     controls:Hide()
 
-    local options = CreateFrame('Frame', 'AzerothVozOptions', UIParent)
-    options.name = 'AzerothVoz'
-    local heading = options:CreateFontString(nil, 'OVERLAY', 'GameFontNormalLarge')
-    heading:SetPoint('TOPLEFT', 16, -16); heading:SetText('AzerothVoz — Português brasileiro')
-    local function Check(label, key, y)
-        local c = CreateFrame('CheckButton', 'AzerothVoz_' .. key, options, 'InterfaceOptionsCheckButtonTemplate')
-        c:SetPoint('TOPLEFT', 20, y)
-        _G[c:GetName() .. 'Text']:SetText(label)
-        c:SetScript('OnShow', function(self) self:SetChecked(A.db[key]) end)
-        c:SetScript('OnClick', function(self)
-            A.db[key] = self:GetChecked() and true or false
-            if not A.db.enabled or not A.db.voice then A.Stop() end
-            if not A.db.enabled then A.Close() end
-            if key == 'extraWindow' and A.current then A.UpdatePresentation(A.nativeFrame) end
-            if key == 'roleplay' and A.current then
-                A.current.rpDismissed = nil; A.UpdatePresentation(A.nativeFrame)
-            end
-            if key == 'rpModel' and A.BindRoleplayModel then A.BindRoleplayModel() end
-        end)
+    local options = CreateFrame('Frame', 'AzerothVozSettings', UIParent)
+    options:SetWidth(550); options:SetHeight(590); options:SetPoint('CENTER')
+    options:SetFrameStrata('FULLSCREEN_DIALOG'); options:EnableMouse(true)
+    T.Surface(options)
+    local heading = T.Label(options, 30)
+    heading:SetPoint('TOPLEFT', 24, -18); heading:SetText('AzerothVoz')
+    local subtitle = T.Label(options, 16, T.muted)
+    subtitle:SetPoint('TOPLEFT', 25, -56); subtitle:SetText('Sua história. No seu idioma.')
+    local function Section(label, y)
+        local text = T.Label(options, 13, T.accent)
+        text:SetPoint('TOPLEFT', 24, y); text:SetText(label)
     end
-    Check('Ativar tradução', 'enabled', -55)
-    Check('Ativar dublagem', 'voice', -90)
-    Check('Registrar falas sem tradução (limite: 1.000)', 'capture', -125)
-    Check('Mostrar também a janela extra de tradução', 'extraWindow', -160)
-    Check('Modo roleplay no centro da tela', 'roleplay', -195)
-    Check('Exibir modelo 3D quando o NPC estiver disponível', 'rpModel', -230)
+    local function Changed(key)
+        if not A.db.enabled or not A.db.voice then A.Stop() end
+        if not A.db.enabled then A.Close() end
+        if (key == 'roleplay' or key == 'extraWindow') and A.current then
+            A.current.rpDismissed = nil; A.UpdatePresentation(A.nativeFrame)
+        end
+        if key == 'rpModel' and A.BindRoleplayModel then A.BindRoleplayModel() end
+    end
+    Section('APRESENTAÇÃO', -92)
+    T.Toggle(options, 'Cena de diálogo', 'roleplay', -112, Changed)
+    T.Toggle(options, 'Personagem em 3D', 'rpModel', -148, Changed)
+    T.Toggle(options, 'Janela de leitura adicional', 'extraWindow', -184, Changed)
+    Section('NARRAÇÃO', -234)
+    T.Toggle(options, 'Ouvir as falas', 'voice', -254, Changed)
     local slider = CreateFrame('Slider', 'AzerothVozVolume', options, 'OptionsSliderTemplate')
-    slider:SetPoint('TOPLEFT', 25, -270); slider:SetWidth(260)
+    slider:SetPoint('TOPLEFT', 30, -314); slider:SetWidth(340)
     slider:SetMinMaxValues(0, 1); slider:SetValueStep(0.05)
     _G[slider:GetName() .. 'Low']:SetText('0%')
     _G[slider:GetName() .. 'High']:SetText('100%')
-    _G[slider:GetName() .. 'Text']:SetText('Volume da narração (canal Música)')
+    _G[slider:GetName() .. 'Text']:SetText('Volume da voz')
     slider:SetScript('OnShow', function(self) self:SetValue(A.db.volume) end)
     slider:SetScript('OnValueChanged', function(self, value)
         A.db.volume = value
         if A.playing then SetCVar('Sound_MusicVolume', tostring(value)) end
     end)
-    local note = options:CreateFontString(nil, 'OVERLAY', 'GameFontHighlight')
-    note:SetPoint('TOPLEFT', 25, -315); note:SetWidth(480); note:SetJustifyH('LEFT')
-    note:SetText('A voz usa o canal Música e restaura o volume ao terminar.\n/avoz previa ID: ouvir uma missão\n/avoz parar ou repetir: controlar a narração\n/avoz rp on ou off: modo roleplay\n/avoz modelo on ou off: modelo 3D\n/avoz cobertura: consultar a cobertura\n/avoz exportar: copiar falas ausentes\n\nBeta: traduções podem ter erros; vozes novas usam um timbre padrão.\nInstale pacotes com o jogo fechado. Cliente: 3.3.5a / 12340.')
-    InterfaceOptions_AddCategory(options)
-    A.options = options
+    Section('TRADUÇÃO', -364)
+    T.Toggle(options, 'Ativar AzerothVoz', 'enabled', -384, Changed)
+    T.Toggle(options, 'Guardar falas ainda não traduzidas', 'capture', -420, Changed)
+    local note = T.Label(options, 15, T.muted)
+    note:SetPoint('TOPLEFT', 24, -478); note:SetWidth(490)
+    note:SetText('Use Anterior e Próxima para ler no seu ritmo. Automático acompanha a duração da fala de forma aproximada.\n\n/avoz centralizar reposiciona a cena.\nTextos da beta podem precisar de revisão.')
+    local close = T.Button(options, 'Fechar', 72, function() options:Hide() end)
+    close:SetPoint('TOPRIGHT', -18, -18)
+    A.settings = options; options:Hide()
+    if UISpecialFrames then table.insert(UISpecialFrames, 'AzerothVozSettings') end
+    -- The original options container is about 413 x 428 units: use a launcher.
+    local category = CreateFrame('Frame', nil, UIParent); category.name = 'AzerothVoz'
+    T.Surface(category)
+    local title = T.Label(category, 26); title:SetPoint('TOPLEFT', 24, -24); title:SetText('AzerothVoz')
+    local intro = T.Label(category, 17, T.muted); intro:SetPoint('TOPLEFT', 24, -66); intro:SetWidth(350)
+    intro:SetText('Personalize a apresentação, a voz e a tradução no painel do AzerothVoz.')
+    local open = T.Button(category, 'Abrir configurações', 220, function() A.OpenOptions() end)
+    open:SetPoint('TOPLEFT', 24, -126)
+    InterfaceOptions_AddCategory(category); A.options = category
     if A.CreateRoleplay then A.CreateRoleplay() end
+end
+
+function A.OpenOptions()
+    if not A.settings then return end
+    if InterfaceOptionsFrame and InterfaceOptionsFrame:IsShown() then InterfaceOptionsFrame:Hide() end
+    local w, h = UIParent:GetWidth() or 1280, UIParent:GetHeight() or 720
+    A.settings:SetScale(math.max(0.5, math.min(w * 0.42 / 550, h * 0.58 / 590)))
+    A.settings:ClearAllPoints(); A.settings:SetPoint('CENTER', UIParent, 'CENTER', 0, 0); A.settings:Show()
 end
 
 function A.ShowLine(record, source, title)
@@ -193,12 +213,12 @@ function A.Export()
         A.exportFrame = f
         f:SetWidth(600); f:SetHeight(400); f:SetPoint('CENTER'); f:SetFrameStrata('FULLSCREEN_DIALOG')
         f:SetBackdrop(A.reader:GetBackdrop())
-        local label = f:CreateFontString(nil, 'OVERLAY', 'GameFontNormal')
+        local label = T.Label(f, 18)
         label:SetPoint('TOP', 0, -20); label:SetText('Ctrl+C: copie e salve como capturas.json em UTF-8')
         local scroll = CreateFrame('ScrollFrame', 'AzerothVozExportScroll', f, 'UIPanelScrollFrameTemplate')
         scroll:SetPoint('TOPLEFT', 20, -50); scroll:SetPoint('BOTTOMRIGHT', -40, 50)
         local edit = CreateFrame('EditBox', nil, scroll)
-        edit:SetMultiLine(true); edit:SetFontObject(ChatFontNormal); edit:SetWidth(530)
+        edit:SetMultiLine(true); edit:SetFont(T.font, 16, ''); edit:SetWidth(530)
         edit:SetAutoFocus(false); edit:SetMaxLetters(0)
         edit:SetScript('OnEscapePressed', function() f:Hide() end)
         scroll:SetScrollChild(edit); f.edit = edit

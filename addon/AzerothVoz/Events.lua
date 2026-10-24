@@ -75,6 +75,7 @@ frame:SetScript('OnEvent', function(self, event, name)
                 A.Preview(tonumber(input:match('%d+')) or 788)
             elseif input == 'parar' then A.Stop()
             elseif input == 'repetir' then A.Play(A.current and A.current.record)
+            elseif input == 'centralizar' then if A.CenterRoleplay then A.CenterRoleplay() end
             elseif input == 'rp on' or input == 'rp off' then
                 A.db.roleplay = input == 'rp on'
                 if A.current then A.current.rpDismissed = nil; A.UpdatePresentation(A.nativeFrame) end
@@ -89,7 +90,7 @@ frame:SetScript('OnEvent', function(self, event, name)
                 A.Message(A.packInfo or 'Consulte o LEIA-ME do pacote para conhecer sua cobertura.')
             elseif input == 'off' then A.db.enabled = false; Close()
             elseif input == 'on' then A.db.enabled = true
-            else InterfaceOptionsFrame_OpenToCategory(A.options) end
+            else A.OpenOptions() end
         end
         A.Message('Versão ' .. A.version .. ' carregada. /avoz demo ou /avoz para configurar.')
     elseif event == 'PLAYER_LOGOUT' or event == 'PLAYER_REGEN_DISABLED' then Close()
