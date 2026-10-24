@@ -13,7 +13,8 @@ class AddonTests(unittest.TestCase):
     def setUp(self):
         self.lua = LuaRuntime(unpack_returned_tuples=True)
         self.lua.execute((ROOT / 'tests' / 'wow_stub.lua').read_text(encoding='utf-8'))
-        for name in ('Core.lua', 'Pack.lua', 'UI.lua', 'Events.lua'):
+        self.lua.execute('AzerothVozDB = { roleplay = false }')
+        for name in ('Core.lua', 'Pack.lua', 'UI.lua', 'Roleplay.lua', 'Events.lua'):
             self.lua.execute((ROOT / 'addon' / 'AzerothVoz' / name).read_text(encoding='utf-8'))
         self.lua.execute("Emit('ADDON_LOADED', 'AzerothVoz')")
 

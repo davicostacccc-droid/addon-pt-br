@@ -16,6 +16,10 @@ from read_lua_data import numeric_rows
 ZONES = {14,15,16,17,141,148,215,331,357,361,400,405,406,440,490,493,618,
          1377,1637,1638,1657,3524,3525,3557,363,220,221,188,2577,718,719,
          491,722,1176,2100,2159,2437,2557,3428,3429}
+NORTHREND_ZONES = {65,66,67,206,210,394,495,1196,2817,3456,3537,3711,3979,
+                   4100,4196,4197,4228,4264,4265,4272,4273,4277,4395,4415,
+                   4416,4493,4494,4500,4560,4603,4722,4723,4742,4809,4812,
+                   4813,4820,4987}
 ENGLISH = {'the','you','your','and','of','to','with','have','will','for','that','this','from','are','not','has','was','our','they','them'}
 WORDS = {'zero':0,'one':1,'two':2,'three':3,'four':4,'five':5,'six':6,'seven':7,'eight':8,'nine':9,'ten':10,
          'eleven':11,'twelve':12,'thirteen':13,'fourteen':14,'fifteen':15,'sixteen':16,'seventeen':17,'eighteen':18,
@@ -59,18 +63,19 @@ def source_supported(text):
     return '$' not in re.sub(r'\$[nNcCrRbB]', '', text)
 
 
-def prepare(research, questie):
+def prepare(research, questie, zones=None):
+    zones = ZONES if zones is None else set(zones)
     base = research / 'azerothcore-english'
     def table(name): return list(read_rows((base / (name + '.sql')).read_text(encoding='utf-8-sig'), name))
     english = {r['ID']: r for r in table('quest_template')}
     starters, enders = {}, {}
     for r in table('creature_queststarter'): starters.setdefault(r['quest'], set()).add(r['id'])
     for r in table('creature_questender'): enders.setdefault(r['quest'], set()).add(r['id'])
-    selected = {q for q, r in english.items() if r['QuestSortID'] in ZONES}
+    selected = {q for q, r in english.items() if r['QuestSortID'] in zones}
     possible = {npc for q, ns in starters.items() if english.get(q, {}).get('QuestSortID', 0) < 0 for npc in ns}
     npcs = dict(numeric_rows((questie / 'Database/Wotlk/wotlkNpcDB.lua').read_text(encoding='utf-8-sig'), only=possible))
     related = {q for q, ns in starters.items() if english.get(q, {}).get('QuestSortID', 0) < 0 and any(
-        n in npcs and (set((npcs[n].get(7) or {}).keys()) & ZONES or npcs[n].get(9) in ZONES) for n in ns)}
+        n in npcs and (set((npcs[n].get(7) or {}).keys()) & zones or npcs[n].get(9) in zones) for n in ns)}
     selected |= related
     rewards = {r['ID']: r['RewardText'] for r in table('quest_offer_reward')}
     progress = {r['ID']: r['CompletionText'] for r in table('quest_request_items')}
@@ -120,7 +125,7 @@ def prepare(research, questie):
     stats = Counter(provider+':'+{'QUEST_DETAIL':'accept','QUEST_PROGRESS':'progress','QUEST_COMPLETE':'complete'}[event]
                     for provider,event,q in {(r['translation_source'],r['event'],r['questID']) for r in lines})
     return dict(version=1,kind='experimental-import-not-manually-reviewed',lines=lines), dict(
-        selection=len(selected),zone_ids=sorted(ZONES),related_quests=len(related),imported_quests=len({r['questID'] for r in lines}),
+        selection=len(selected),zone_ids=sorted(zones),related_quests=len(related),imported_quests=len({r['questID'] for r in lines}),
         records=len(lines),phases=dict(stats),issues=issues,selected_ids=sorted(selected))
 
 
@@ -128,9 +133,11 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--research',type=Path,required=True); parser.add_argument('--questie',type=Path,required=True)
     parser.add_argument('--out',type=Path,required=True)
+    parser.add_argument('--region',choices=('kalimdor','northrend'),default='kalimdor')
     args=parser.parse_args()
     if args.out.exists(): raise FileExistsError('Choose a new output directory')
-    catalog,audit=prepare(args.research,args.questie)
+    catalog,audit=prepare(args.research,args.questie,NORTHREND_ZONES if args.region=='northrend' else ZONES)
+    audit['region']=args.region
     args.out.mkdir(parents=True)
     for name,data in [('catalog.json',catalog),('audit.json',audit)]:
         (args.out/name).write_text(json.dumps(data,ensure_ascii=False,indent=2),encoding='utf-8')

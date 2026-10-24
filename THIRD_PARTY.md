@@ -8,6 +8,8 @@ Textos, personagens e nomes de World of Warcraft pertencem aos respectivos titul
 
 FrameXML: https://github.com/wowgaming/3.3.5-interface-files — consulta de nomes de funções/eventos/globais antigos. Nenhum desses arquivos está no pacote instalável. ForeverVO, fornecido na pasta REFERENCIA, foi inspecionado para comparação; nenhuma API moderna ou arquivo dele foi incorporado.
 
+Modo roleplay 0.5.0: consulta adicional do esquema PlayerModel e scripts antigos, do inventário documental brues-code/ClassicAPI e dos identificadores de animação no AzerothCore. Implementação própria; sem código ou imagens desses projetos incorporados. Guias Zygor e RestedXP fornecidos pelo jogador foram consultados apenas como referências de IDs/rotas, sem executar seus scripts ou redistribuir seus guias. Veja docs/GUIAS-E-ROLEPLAY.md.
+
 Piper 1.4.2: https://github.com/OHF-Voice/piper1-gpl — GPL-3.0-or-later. Instalado separadamente em .venv; não acompanha o addon. Faber medium: https://huggingface.co/rhasspy/piper-voices/tree/main/pt/pt_BR/faber/medium — a model card consultada declara dataset CC0 e informa ajuste a partir da voz lessac medium. A model card e hashes dos arquivos ficam em models/ e um registro é incluído na documentação da entrega; não redistribuímos o modelo ONNX no ZIP do addon.
 
 imageio-ffmpeg 0.6.0: https://github.com/imageio/imageio-ffmpeg — wrapper BSD-2-Clause; o executável FFmpeg tem suas próprias condições de licença. É instalado separadamente para converter WAV em MP3; não acompanha o addon. Lupa 2.6: https://github.com/scoder/lupa — licença estilo MIT, apenas testes. As demais dependências são resolvidas pelo pip e ficam registradas em requirements-lock.txt.

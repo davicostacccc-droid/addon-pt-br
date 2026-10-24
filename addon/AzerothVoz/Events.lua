@@ -8,6 +8,7 @@ local functions = { QUEST_DETAIL = GetQuestText, QUEST_PROGRESS = GetProgressTex
 local function Close()
     A.pending, A.current = nil, nil
     A.Stop()
+    if A.HideRoleplay then A.HideRoleplay() end
     if A.reader then A.reader:Hide() end
     if A.controls then A.controls:Hide() end
     A.nativeFrame = nil
@@ -64,6 +65,7 @@ frame:SetScript('OnEvent', function(self, event, name)
         for ev in pairs(functions) do self:RegisterEvent(ev) end
         self:RegisterEvent('QUEST_FINISHED'); self:RegisterEvent('GOSSIP_CLOSED')
         self:RegisterEvent('PLAYER_LOGOUT')
+        self:RegisterEvent('PLAYER_REGEN_DISABLED')
         SLASH_AZEROTHVOZ1 = '/avoz'
         SlashCmdList.AZEROTHVOZ = function(input)
             input = string.lower(input or '')
@@ -73,6 +75,12 @@ frame:SetScript('OnEvent', function(self, event, name)
                 A.Preview(tonumber(input:match('%d+')) or 788)
             elseif input == 'parar' then A.Stop()
             elseif input == 'repetir' then A.Play(A.current and A.current.record)
+            elseif input == 'rp on' or input == 'rp off' then
+                A.db.roleplay = input == 'rp on'
+                if A.current then A.current.rpDismissed = nil; A.UpdatePresentation(A.nativeFrame) end
+            elseif input == 'modelo on' or input == 'modelo off' then
+                A.db.rpModel = input == 'modelo on'
+                if A.BindRoleplayModel then A.BindRoleplayModel() end
             elseif input == 'janela on' or input == 'janela off' then
                 A.db.extraWindow = input == 'janela on'
                 if A.current then A.UpdatePresentation(A.nativeFrame) end
@@ -84,7 +92,7 @@ frame:SetScript('OnEvent', function(self, event, name)
             else InterfaceOptionsFrame_OpenToCategory(A.options) end
         end
         A.Message('Versão ' .. A.version .. ' carregada. /avoz demo ou /avoz para configurar.')
-    elseif event == 'PLAYER_LOGOUT' then Close()
+    elseif event == 'PLAYER_LOGOUT' or event == 'PLAYER_REGEN_DISABLED' then Close()
     elseif event == 'QUEST_FINISHED' or event == 'GOSSIP_CLOSED' then
         -- A late close event from the previous window must not erase the new
         -- window's pending line (gossip -> quest is a frequent transition).
@@ -94,10 +102,12 @@ frame:SetScript('OnEvent', function(self, event, name)
     elseif functions[event] then
         local unit = event == 'GOSSIP_SHOW' and 'npc' or 'questnpc'
         local npc = A.NpcID(UnitGUID(unit))
+        local speaker = npc and { unit = unit, guid = UnitGUID(unit), name = UnitName(unit) } or nil
         local text = functions[event]()
         local title = event == 'GOSSIP_SHOW' and UnitName(unit) or GetTitleText()
         -- Delay only presentation so Blizzard has finished updating its frames.
         A.pending = { event = event, npc = npc, text = text, title = title,
+            speaker = speaker,
             questID = event ~= 'GOSSIP_SHOW' and QuestID(title) or nil, at = GetTime() + 0.05 }
     end
 end)
@@ -105,10 +115,10 @@ end)
 frame:SetScript('OnUpdate', function()
     if A.pending and GetTime() >= A.pending.at then
         local p = A.pending; A.pending = nil
-        A.Handle(p.event, p.npc, p.text, p.title, p.questID)
+        A.Handle(p.event, p.npc, p.text, p.title, p.questID, p.speaker)
         RenderNative()
     end
-    if A.endsAt and GetTime() >= A.endsAt then A.Stop() end
+    if A.endsAt and GetTime() >= A.endsAt then A.Stop('finished') end
     if A.nativeFrame and not A.nativeFrame:IsShown() then Close() end
 end)
 

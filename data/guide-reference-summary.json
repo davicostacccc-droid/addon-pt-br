@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-24",
+  "kind": "sampled-reference-metadata-only",
+  "files": [
+    {
+      "guide": "zygor",
+      "file": "ZygorGuidesViewer/Guides/Leveling/ZygorLevelingAllianceCATA.lua",
+      "url": "https://raw.githubusercontent.com/ErebusAres/ZygorGuidesPlus_3.3.5a-WOTLK/HEAD/ZygorGuidesViewer/Guides/Leveling/ZygorLevelingAllianceCATA.lua",
+      "sha256": "553346a58518dceace0603aa63b40a0134dc16b2dec01e4d20a6e54071ab8bd3",
+      "quest_ids": 3920,
+      "northrend_selection_overlap": 919
+    },
+    {
+      "guide": "zygor",
+      "file": "ZygorGuidesViewer/Guides/Leveling/ZygorLevelingHordeCATA.lua",
+      "url": "https://raw.githubusercontent.com/ErebusAres/ZygorGuidesPlus_3.3.5a-WOTLK/HEAD/ZygorGuidesViewer/Guides/Leveling/ZygorLevelingHordeCATA.lua",
+      "sha256": "49ad67d0b0b1a3dd4036f468fa750ea7212b6983f768e8327e869b82330b0d8f",
+      "quest_ids": 4202,
+      "northrend_selection_overlap": 905
+    },
+    {
+      "guide": "rxp",
+      "file": "Guides/WotLK/Alliance-Leveling.lua",
+      "url": "https://raw.githubusercontent.com/PottedSalame/RestedXP_RXPGuides-WotLK_3.3.5a/HEAD/Guides/WotLK/Alliance-Leveling.lua",
+      "sha256": "828d59482d6aa34cd84b5ea727c0b16e29e8dec74f2dbe333577458fc5bea491",
+      "quest_ids": 758,
+      "northrend_selection_overlap": 742
+    },
+    {
+      "guide": "rxp",
+      "file": "Guides/WotLK/Horde-Leveling.lua",
+      "url": "https://raw.githubusercontent.com/PottedSalame/RestedXP_RXPGuides-WotLK_3.3.5a/HEAD/Guides/WotLK/Horde-Leveling.lua",
+      "sha256": "2268d267daf25291e27fd8eaf8beba68d95c960bae687c590547068e0bbf2db2",
+      "quest_ids": 722,
+      "northrend_selection_overlap": 704
+    }
+  ]
+}

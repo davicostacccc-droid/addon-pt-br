@@ -31,26 +31,37 @@ def decode_audio(item):
     return dict(audio=path.name,seconds=seconds,mean_db=db)
 
 
-def verify(out, zipped):
+def verify(out, zipped, preserved_paths=None, regional_audit=None, roleplay_checks=False):
     if zipped.exists(): raise FileExistsError('Preserve existing ZIPs')
     started = time.monotonic()
     manifest=json.loads((out/'manifest.json').read_text(encoding='utf-8'))
     imported=json.loads((out.parent/'expected-records.json').read_text(encoding='utf-8'))
-    preserved=json.loads((ROOT/'dist/durotar-0.3.0/expected-records.json').read_text(encoding='utf-8'))
+    preserved=[]
+    for path in preserved_paths or [ROOT/'dist/durotar-0.3.0/expected-records.json']:
+        preserved.extend(json.loads(path.read_text(encoding='utf-8')))
     coverage=json.loads((out/'COBERTURA.json').read_text(encoding='utf-8'))
     available=defaultdict(set)
     for row in preserved+imported: available[row['questID']].add(row['event'])
     # Report completion against actual nonempty dialogue phases in the English
     # snapshot, not an assumption that every quest has exactly three phases.
     expected=defaultdict(set)
-    selected=set(available) | set(coverage['quests_without_any_phase'])
+    selected=set(json.loads(regional_audit.read_text(encoding='utf-8'))['selected_ids']) if regional_audit else set(available) | set(coverage['quests_without_any_phase'])
+    combined_selected=set(selected) | set(available)
+    previous_coverage=out/'COBERTURA-ANTERIOR.json'
+    if previous_coverage.exists():
+        previous=json.loads(previous_coverage.read_text(encoding='utf-8'))
+        combined_selected.update(previous.get('selected_ids',previous.get('quests_without_any_phase',[])))
     for name,event,field in [('quest_template','QUEST_DETAIL','QuestDescription'),
                              ('quest_request_items','QUEST_PROGRESS','CompletionText'),
                              ('quest_offer_reward','QUEST_COMPLETE','RewardText')]:
         sql=ROOT/'research/azerothcore-english'/(name+'.sql')
         for row in read_rows(sql.read_text(encoding='utf-8-sig'),name):
-            if row['ID'] in selected and row[field]: expected[row['ID']].add(event)
+            if row['ID'] in combined_selected and row[field]: expected[row['ID']].add(event)
     coverage['quests_with_all_reference_phases']=sum(bool(expected.get(q)) and expected[q]<=available.get(q,set()) for q in selected)
+    coverage['selected_ids']=sorted(selected)
+    coverage['combined_selected_quests']=len(combined_selected)
+    coverage['combined_quests_with_all_reference_phases']=sum(bool(expected.get(q)) and expected[q]<=available.get(q,set()) for q in combined_selected)
+    coverage['combined_quests_without_any_phase']=sorted(combined_selected-set(available))
     coverage['distinct_quest_phases']=sum(len(es) for es in available.values())
     coverage['manual_review']='Imported text NOT fully manually reviewed; all-reference-phases means coverage, not certified accuracy.'
     (out/'COBERTURA.json').write_text(json.dumps(coverage,ensure_ascii=False,indent=2),encoding='utf-8')
@@ -66,6 +77,7 @@ def verify(out, zipped):
     (out/'PROVENIENCIA.json').write_text(json.dumps(dict(target_build=12340,date='2026-10-24',references=references),indent=2),encoding='utf-8')
     lua=LuaRuntime(unpack_returned_tuples=True)
     lua.execute((ROOT/'tests/wow_stub.lua').read_text(encoding='utf-8'))
+    lua.execute('AzerothVozDB={roleplay=false}')
     load_start=time.monotonic()
     toc=(out/'AzerothVoz.toc').read_text(encoding='utf-8')
     for name in [s.strip() for s in toc.splitlines() if s.strip() and not s.startswith('#')]:
@@ -94,6 +106,20 @@ def verify(out, zipped):
     if mismatches:
         (out.parent/'FAILED-LOOKUPS.json').write_text(json.dumps(mismatches,indent=2),encoding='utf-8')
         raise ValueError(f'{len(mismatches)} ambiguous/missing runtime records; inspect FAILED-LOOKUPS.json')
+    rp_checks=0
+    if roleplay_checks:
+        lua.execute('AzerothVozDB.roleplay=true')
+        samples=(preserved+imported)[::max(1,len(preserved+imported)//100)]
+        for row in samples:
+            lua.globals()._text=lua.eval('AzerothVoz.ResolveSource')(row['source'])
+            lua.globals()._title=row.get('sourceTitle','English title')
+            lua.globals()._guid=f"0xF130{row['npc']:06X}000001" if row['npc'] else None
+            lua.eval('Emit')(row['event']); lua.execute('Tick(0.1); Tick(0.1)')
+            lua.execute('assert(AzerothVoz.roleplay:IsShown() and not AzerothVoz.reader:IsShown() and not AzerothVoz.controls:IsShown())')
+            assert lua.eval('AzerothVoz.roleplay.modelReady') == bool(row['npc'])
+            lua.execute("Emit('QUEST_FINISHED'); assert(not AzerothVoz.roleplay:IsShown() and not AzerothVoz.roleplay.shade:IsShown())")
+            rp_checks+=1
+        lua.execute("SlashCmdList.AZEROTHVOZ('rp off')")
     lua.execute("SlashCmdList.AZEROTHVOZ('demo'); assert(AzerothVoz.playing); SlashCmdList.AZEROTHVOZ('parar')")
     unique={}
     for row in manifest:
@@ -117,7 +143,7 @@ def verify(out, zipped):
         for file in out.rglob('*'):
             if file.is_file() and archive.read('AzerothVoz/'+file.relative_to(out).as_posix())!=file.read_bytes():
                 raise ValueError('ZIP byte mismatch')
-    report=dict(lua='Lua 5.1',quest_event_checks=checks,load_seconds=load_seconds,unique_audio=reports,
+    report=dict(lua='Lua 5.1',quest_event_checks=checks,roleplay_event_checks=rp_checks,load_seconds=load_seconds,unique_audio=reports,
                 zip_verified=True,zip_sha256=digest(zipped),elapsed_seconds=time.monotonic()-started,in_game='pending player confirmation')
     (out.parent/'VERIFICACAO.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
     (out.parent/'SHA256SUMS.txt').write_text(digest(zipped)+'  '+zipped.name+'\n')
@@ -127,4 +153,6 @@ def verify(out, zipped):
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('addon',type=Path);parser.add_argument('--zip',type=Path,required=True)
-    args=parser.parse_args();verify(args.addon,args.zip)
+    parser.add_argument('--preserved-records',type=Path,action='append')
+    parser.add_argument('--regional-audit',type=Path);parser.add_argument('--roleplay',action='store_true')
+    args=parser.parse_args();verify(args.addon,args.zip,args.preserved_records,args.regional_audit,args.roleplay)

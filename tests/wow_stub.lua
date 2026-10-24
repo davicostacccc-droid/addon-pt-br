@@ -27,9 +27,33 @@ local function Widget(kind, name)
     function w:SetBackdrop(value) self.backdrop = value end
     function w:GetBackdrop() return self.backdrop end
     function w:CreateFontString() return Widget('FontString') end
+    function w:CreateTexture() return Widget('Texture') end
+    function w:SetWidth(value) self.width = value end
+    function w:GetWidth() return self.width or 1280 end
+    function w:SetHeight(value) self.height = value end
+    function w:SetAlpha(value) self.alpha = value end
+    function w:GetAlpha() return self.alpha or 1 end
+    function w:SetScale(value) self.scale = value end
+    function w:SetTexture(value) self.texture = value end
+    function w:SetBackdropColor(...) self.color = {...} end
+    function w:SetBackdropBorderColor(...) self.borderColor = {...} end
+    function w:SetStatusBarTexture(value) assert(self.kind == 'StatusBar'); self.texture = value end
+    function w:SetStatusBarColor(...) assert(self.kind == 'StatusBar'); self.barColor = {...} end
+    if kind == 'PlayerModel' then
+        function w:SetUnit(unit)
+            if _modelError then error('model unavailable') end
+            assert(UnitGUID(unit)); self.unit = unit
+            self.model = _modelLoads ~= false and 'Creature\\Example\\Example.m2' or nil
+        end
+        function w:GetModel() return self.model end
+        function w:ClearModel() self.model = nil; self.unit = nil end
+        function w:SetSequence(value) self.sequence = value end
+        function w:SetCamera(value) self.camera = value end
+        function w:SetFacing(value) self.facing = value end
+    end
     -- These are ordinary legacy frame/font/editbox methods. Do not absorb
     -- arbitrary unknown methods: a mistaken modern method should fail tests.
-    for _, method in ipairs({ 'SetWidth', 'SetHeight', 'SetPoint', 'SetFrameStrata', 'EnableMouse',
+    for _, method in ipairs({ 'SetPoint', 'SetAllPoints', 'SetFrameStrata', 'EnableMouse',
         'SetMovable', 'RegisterForDrag', 'StartMoving', 'StopMovingOrSizing', 'SetJustifyH',
         'SetScrollChild', 'SetVerticalScroll', 'SetMinMaxValues', 'SetValueStep', 'SetMultiLine',
         'SetFontObject', 'SetAutoFocus', 'SetMaxLetters', 'SetFocus', 'HighlightText', 'ClearAllPoints' }) do
@@ -40,6 +64,7 @@ end
 UIParent = Widget('Frame', 'UIParent')
 ChatFontNormal = {}
 function CreateFrame(kind, name, parent, template)
+    if kind == 'PlayerModel' and _modelUnsupported then error('Unsupported PlayerModel') end
     if template then assert(templates[template], 'Non-legacy template: ' .. template) end
     local w = Widget(kind, name)
     table.insert(_frames, w)
@@ -55,6 +80,7 @@ function UnitGUID() return _guid end
 function UnitClass() return 'Warrior', 'WARRIOR' end
 function UnitRace() return 'Orc', 'Orc' end
 function UnitSex() return 2 end
+function UnitAffectingCombat() return _combat or false end
 function GetLocale() return 'enUS' end
 function GetBuildInfo() return '3.3.5', _build, '', 30300 end
 function GetTime() return _clock end

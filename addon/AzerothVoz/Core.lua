@@ -1,5 +1,5 @@
 -- Lua 5.1 / WoW 3.3.5a. No HTTP, file I/O or modern C_* APIs.
-AzerothVoz = { version = '0.4.0-beta1', index = {}, templates = {}, resolved = {}, quests = {}, count = 0 }
+AzerothVoz = { version = '0.5.0-beta1', index = {}, templates = {}, resolved = {}, quests = {}, count = 0 }
 local A = AzerothVoz
 
 function A.Normalize(text)
@@ -138,7 +138,8 @@ end
 function A.Init()
     AzerothVozDB = AzerothVozDB or {}
     A.db = AzerothVozDB
-    local defaults = { enabled = true, voice = true, volume = 0.7, capture = true, extraWindow = false }
+    local defaults = { enabled = true, voice = true, volume = 0.7, capture = true, extraWindow = false,
+        roleplay = true, rpModel = true }
     for k, v in pairs(defaults) do if A.db[k] == nil then A.db[k] = v end end
     A.db.volume = math.max(0, math.min(1, tonumber(A.db.volume) or 0.7))
     AzerothVozCaptures = AzerothVozCaptures or { version = 1, lines = {} }
@@ -149,15 +150,17 @@ function A.Init()
     A.Stop()
 end
 
-function A.Stop()
+function A.Stop(reason)
     if A.playing and StopMusic then StopMusic() end
-    A.playing, A.endsAt = nil, nil
+    A.playing, A.endsAt, A.startedAt = nil, nil, nil
+    A.lastStopReason = reason == 'finished' and 'finished' or 'stopped'
     if A.db and A.db.musicBefore then
         local old = A.db.musicBefore
         SetCVar('Sound_MusicVolume', old.volume)
         SetCVar('Sound_EnableMusic', old.enabled)
         A.db.musicBefore = nil
     end
+    if A.RoleplayVoiceChanged then A.RoleplayVoiceChanged() end
 end
 
 function A.Play(record)
@@ -173,7 +176,9 @@ function A.Play(record)
     SetCVar('Sound_MusicVolume', tostring(A.db.volume))
     PlayMusic('Interface\\AddOns\\AzerothVoz\\' .. record.audio)
     A.playing = record
+    A.startedAt = GetTime()
     A.endsAt = GetTime() + record.duration + 0.25
+    if A.RoleplayVoiceChanged then A.RoleplayVoiceChanged() end
 end
 
 function A.Capture(event, npc, text, title, questID)
@@ -190,7 +195,7 @@ function A.Capture(event, npc, text, title, questID)
         title = title or '', questID = questID, locale = GetLocale() }
 end
 
-function A.Handle(event, npc, source, title, questID)
+function A.Handle(event, npc, source, title, questID, speaker)
     local missingNPC = not npc
     if not npc and (event == 'QUEST_DETAIL' or event == 'QUEST_PROGRESS' or event == 'QUEST_COMPLETE') then npc = 0 end
     if not A.db or not A.db.enabled or not npc or not source or source == '' or
@@ -200,15 +205,17 @@ function A.Handle(event, npc, source, title, questID)
         if A.controls then A.controls:Hide() end
         if A.RestoreNative then A.RestoreNative() end
         A.nativeFrame = nil
+        if A.HideRoleplay then A.HideRoleplay() end
         return
     end
     local text = A.Tokenize(source)
     local record = A.Lookup(event, npc, text, title) or A.Lookup(event, npc, source, title)
     local key = A.Key(event, npc, text)
-    if A.current and A.current.key == key and A.current.source == text and A.current.record == record then return end
+    if A.current and A.current.key == key and A.current.source == text and A.current.record == record and
+        (not speaker or A.current.speaker and A.current.speaker.guid == speaker.guid) then return end
     A.Stop()
     if A.RestoreNative then A.RestoreNative() end
-    A.current = { key = key, record = record, source = text, event = event }
+    A.current = { key = key, record = record, source = text, event = event, speaker = speaker }
     if not record then A.Capture(event, npc, text, title, questID) end
     if A.ShowLine then A.ShowLine(record, source, title) end
     if record then A.Play(record) end

@@ -1,8 +1,10 @@
-# AzerothVoz PT-BR — 0.4.0-beta1 Kalimdor
+# AzerothVoz PT-BR — 0.5.0-beta1 Northrend e Roleplay
 
-**Beta local:** `dist/AzerothVoz-0.4.0-beta1-Kalimdor-12340.zip`. Amplia a cobertura por regiões de Kalimdor com traduções importadas experimentalmente e narração local. Não cobre 100% das missões ou de todas as etapas. As contagens e lacunas estão em `COBERTURA.json` no pacote. [Instalação e teste da beta](docs/BETA-KALIMDOR.md). A versão ainda aguarda confirmação no cliente; as onze missões e gravações anteriores foram preservadas. A versão anterior continua disponível localmente em `dist/AzerothVoz-0.3.0-Durotar-12340.zip`.
+**Beta local:** `dist/AzerothVoz-0.5.0-beta1-Northrend-Roleplay-12340.zip`. Amplia a cobertura de Northrend preservando Kalimdor, com traduções importadas experimentalmente e narração local. Acrescenta uma apresentação central opcional com modelo 3D do interlocutor quando disponível, texto rolável, entrada suave e controles. Não cobre 100% das missões ou de todas as etapas. [Instalação e teste](docs/BETA-NORTHREND-RP.md). A versão ainda aguarda confirmação no cliente; a beta Kalimdor anterior continua preservada em `dist/AzerothVoz-0.4.0-beta1-Kalimdor-12340.zip`.
 
-Nesta compilação: **1.800 missões com ao menos uma etapa**, de 2.293 IDs selecionados; 675 têm todas as etapas de diálogo existentes na referência. Há 3.114 etapas distintas, 3.006 MP3s únicos e 493 IDs selecionados sem etapa traduzida. Os números não certificam a exatidão de cada tradução. Passaram 48 testes e 6.542 verificações de eventos em Lua 5.1; todos os MP3s foram decodificados e o ZIP conferido. O [resumo de verificação](data/beta-kalimdor-0.4.0-summary.json) registra cobertura e hash do ZIP local de aproximadamente 404 MB.
+As contagens regionais e combinadas estão em `COBERTURA.json` no pacote; cobertura não certifica a exatidão de cada tradução. A confirmação do jogador das versões anteriores não valida a interface 3D nova. A [análise dos guias Zygor/RestedXP e APIs antigas](docs/GUIAS-E-ROLEPLAY.md) explica as referências consultadas. O [resumo da beta Kalimdor anterior](data/beta-kalimdor-0.4.0-summary.json) continua disponível para comparação.
+
+Recorte atual: **1.903 de 2.087 IDs de Northrend** com ao menos uma etapa, sendo 772 com todas as etapas de diálogo da referência. O pacote combinado tem 3.696 IDs com alguma etapa e 6.685 etapas distintas. Faltam 184 IDs regionais e há missões parciais. As novas vozes usam timbre padrão; o 3D usa a unidade real da conversa e símbolo neutro nas prévias sem NPC. Consulte o [resumo de verificação 0.5.0](data/beta-northrend-0.5.0-summary.json).
 
 Este repositório contém código, ferramentas, textos próprios revisados e testes. Os catálogos completos importados da beta, ZIPs instaláveis gerados localmente, áudios de terceiros, modelos e capturas não fazem parte do Git. Baixar apenas o código não fornece automaticamente todos os textos e áudios do pacote local. As traduções importadas da beta não foram todas revisadas manualmente e as novas vozes usam um timbre padrão compartilhado.
 
@@ -10,15 +12,15 @@ Tradução e narração para **WoW original 3.3.5a, build 12340**. O addon usa t
 
 Não é uma tradução completa do WoW. O pacote inicial 0.1.0 continha apenas a demonstração e uma saudação de McBride; a atualização Gornek acrescentou a fala capturada pelo jogador. Os procedimentos de geração básica abaixo continuam disponíveis; o novo recorte Durotar usa fontes e ferramentas adicionais descritas em `docs/INTEGRACAO-PACOTE-PTBR.md`.
 
-## Teste rápido: beta Kalimdor
+## Teste rápido: beta Northrend e Roleplay
 
 1. Feche o WoW completamente.
-2. Extraia `dist/AzerothVoz-0.4.0-beta1-Kalimdor-12340.zip`. Guarde uma cópia da pasta anterior antes de substituir **AzerothVoz** em `SuaPastaWoW/Interface/AddOns/`.
+2. Extraia `dist/AzerothVoz-0.5.0-beta1-Northrend-Roleplay-12340.zip`. Guarde uma cópia da pasta anterior antes de substituir **AzerothVoz** em `SuaPastaWoW/Interface/AddOns/`.
 3. O caminho final precisa ser `Interface/AddOns/AzerothVoz/AzerothVoz.toc`.
 4. Na seleção de personagens, ative AzerothVoz. Para o primeiro teste, desative outros addons de tradução/voz para evitar duas narrações ou disputa pelos textos.
 5. Entre no jogo e digite `/avoz demo`. Uma janela deve exibir a demonstração em português e a voz deve tocar. É um texto demonstrativo criado para este projeto.
 6. Digite `/avoz` para as configurações e teste o volume, ativar/desativar a voz e o botão Parar.
-7. Use `/avoz cobertura` para consultar o recorte instalado. Teste `/avoz previa 844`, `/avoz previa 747` ou `/avoz previa 456`; as prévias funcionam longe dos NPCs. Depois abra missões disponíveis normalmente para testar a detecção real. A saudação anterior de McBride também foi preservada.
+7. Use `/avoz cobertura` para consultar o recorte instalado e `/avoz rp on` para a apresentação central. As prévias funcionam longe dos NPCs, com símbolo neutro no lugar do modelo. Depois abra missões disponíveis normalmente para testar a detecção real e o 3D do interlocutor. `/avoz rp off` volta ao modo anterior; `/avoz modelo off` conserva a moldura sem 3D.
 
 O script `scripts/Instalar.ps1` original usa a saída antiga `dist/release`; para o teste atual, utilize o ZIP indicado acima. Nenhum script foi executado contra sua instalação do WoW.
 
@@ -26,7 +28,7 @@ O script `scripts/Instalar.ps1` original usa a saída antiga `dist/release`; par
 
 A [análise consolidada das fontes](docs/FONTES-CONSOLIDADAS.md) reúne AzerothCore, Questie, WotLKDB, Cavern of Time, traduções e áudios. O cruzamento local identificou 2.952 IDs com candidatos a texto e alguma gravação; eles ainda exigem revisão e não representam cobertura instalada. A ferramenta `tools/analyze_source_coverage.py` reproduz o inventário sem executar código externo.
 
-A beta usa `tools/prepare_kalimdor_beta.py` para selecionar e filtrar os candidatos locais, `tools/build_kalimdor_beta.py` para sintetizar com cache preservando a 0.3.0, e `tools/verify_kalimdor_beta.py` para validar a entrega e criar o ZIP. O leitor `tools/read_lua_data.py` aceita somente tabelas literais; não executa os addons externos. Os comandos de geração básica abaixo continuam separados desse fluxo experimental.
+A beta usa `tools/prepare_kalimdor_beta.py --region northrend` para selecionar e filtrar os candidatos locais, `tools/build_kalimdor_beta.py` com versão/região e pacote anterior para sintetizar com cache, e `tools/verify_kalimdor_beta.py --roleplay` para validar a entrega e criar o ZIP. O leitor `tools/read_lua_data.py` aceita somente tabelas literais; não executa os addons externos. Os comandos de geração básica abaixo continuam separados desse fluxo experimental.
 
 ## Comandos no jogo
 
@@ -34,6 +36,8 @@ A beta usa `tools/prepare_kalimdor_beta.py` para selecionar e filtrar os candida
 |---|---|
 | `/avoz` | Abre configurações em Interface |
 | `/avoz cobertura` | Informa a cobertura parcial do pacote instalado |
+| `/avoz rp on` / `/avoz rp off` | Ativa/desativa a moldura central de roleplay |
+| `/avoz modelo on` / `/avoz modelo off` | Ativa/desativa o modelo 3D da moldura |
 | `/avoz demo` | Mostra texto e reproduz a voz da demonstração |
 | `/avoz parar` | Para a narração e restaura o volume anterior |
 | `/avoz off` / `/avoz on` | Desativa / ativa o addon |

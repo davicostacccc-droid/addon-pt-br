@@ -54,14 +54,20 @@ function A.CreateUI()
             if not A.db.enabled or not A.db.voice then A.Stop() end
             if not A.db.enabled then A.Close() end
             if key == 'extraWindow' and A.current then A.UpdatePresentation(A.nativeFrame) end
+            if key == 'roleplay' and A.current then
+                A.current.rpDismissed = nil; A.UpdatePresentation(A.nativeFrame)
+            end
+            if key == 'rpModel' and A.BindRoleplayModel then A.BindRoleplayModel() end
         end)
     end
     Check('Ativar tradução', 'enabled', -55)
     Check('Ativar dublagem', 'voice', -90)
     Check('Registrar falas sem tradução (limite: 1.000)', 'capture', -125)
     Check('Mostrar também a janela extra de tradução', 'extraWindow', -160)
+    Check('Modo roleplay no centro da tela', 'roleplay', -195)
+    Check('Exibir modelo 3D quando o NPC estiver disponível', 'rpModel', -230)
     local slider = CreateFrame('Slider', 'AzerothVozVolume', options, 'OptionsSliderTemplate')
-    slider:SetPoint('TOPLEFT', 25, -200); slider:SetWidth(260)
+    slider:SetPoint('TOPLEFT', 25, -270); slider:SetWidth(260)
     slider:SetMinMaxValues(0, 1); slider:SetValueStep(0.05)
     _G[slider:GetName() .. 'Low']:SetText('0%')
     _G[slider:GetName() .. 'High']:SetText('100%')
@@ -72,10 +78,11 @@ function A.CreateUI()
         if A.playing then SetCVar('Sound_MusicVolume', tostring(value)) end
     end)
     local note = options:CreateFontString(nil, 'OVERLAY', 'GameFontHighlight')
-    note:SetPoint('TOPLEFT', 25, -250); note:SetWidth(480); note:SetJustifyH('LEFT')
-    note:SetText('A narração usa o canal Música e restaura o volume ao terminar.\n\n/avoz previa: ouvir uma missão do pacote\n/avoz exportar: copiar falas pendentes\n/avoz parar: interromper a fala\n/avoz repetir: repetir a fala atual\n/avoz janela on ou off: janela extra\n/avoz cobertura: consultar a cobertura instalada\n\nBeta: textos importados podem ter erros; vozes novas usam uma voz padrão.\nPacotes novos: instale com o jogo fechado. Cliente alvo: 3.3.5a / 12340.')
+    note:SetPoint('TOPLEFT', 25, -315); note:SetWidth(480); note:SetJustifyH('LEFT')
+    note:SetText('A voz usa o canal Música e restaura o volume ao terminar.\n/avoz previa ID: ouvir uma missão\n/avoz parar ou repetir: controlar a narração\n/avoz rp on ou off: modo roleplay\n/avoz modelo on ou off: modelo 3D\n/avoz cobertura: consultar a cobertura\n/avoz exportar: copiar falas ausentes\n\nBeta: traduções podem ter erros; vozes novas usam um timbre padrão.\nInstale pacotes com o jogo fechado. Cliente: 3.3.5a / 12340.')
     InterfaceOptions_AddCategory(options)
     A.options = options
+    if A.CreateRoleplay then A.CreateRoleplay() end
 end
 
 function A.ShowLine(record, source, title)
@@ -88,6 +95,7 @@ function A.ShowLine(record, source, title)
     if record and record.objectives then text = text .. '\n\nObjetivos:\n' .. A.Expand(record.objectives) end
     f.text:SetText(text); f.body:SetHeight(math.max(1, f.text:GetStringHeight() + 10))
     f.scroll:SetVerticalScroll(0); f:Show()
+    A.UpdatePresentation(nil)
 end
 
 -- Hide the duplicate only after a translated native frame is confirmed visible.
@@ -97,6 +105,10 @@ function A.UpdatePresentation(nativeFrame)
     local visible = current and current.record and current.event ~= 'DEMO' and nativeFrame
         and nativeFrame:IsShown()
     A.nativeFrame = visible and nativeFrame or nil
+    if A.db.roleplay and A.ShowRoleplay and A.ShowRoleplay() then
+        A.controls:Hide(); A.reader:Hide(); return
+    end
+    if A.HideRoleplay then A.HideRoleplay() end
     if visible then
         if A.db.extraWindow then
             A.controls:Hide(); A.reader:Show()
