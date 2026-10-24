@@ -1,6 +1,6 @@
-# AzerothVoz PT-BR — protótipo 0.2.1
+# AzerothVoz PT-BR — protótipo 0.3.0
 
-**Pacote local atual:** `dist/AzerothVoz-0.2.1-Durotar-12340.zip`. Mantém 16 etapas de seis missões do Vale das Provações, com ajustes para evitar a janela duplicada e traduzir rótulos/botões da janela nativa. [Teste da interface 0.2.1](docs/TESTE-0.2.1.md) e [cobertura de missões](docs/TESTE-DUROTAR-0.2.0.md). A gravação do jogador confirmou a saudação do Gornek e a apresentação de Dentes cortantes na 0.2.0; o jogador também confirmou que o ajuste 0.2.1 funcionou e ficou bom. As demais etapas ainda não foram todas confirmadas no jogo.
+**Pacote local atual:** dist/AzerothVoz-0.3.0-Durotar-12340.zip. Preserva a interface 0.2.1 aprovada pelo jogador e amplia a cobertura para 11 missões, 30 etapas de missão e 14 novas falas geradas localmente. [Instalação e teste 0.3.0](docs/TESTE-0.3.0.md). A nova cobertura foi verificada automaticamente, mas ainda aguarda confirmação no cliente. Veja também a [análise da cópia Questie-335 fornecida pelo usuário](docs/ANALISE-QUESTIE.md).
 
 Este repositório contém código, ferramentas, textos revisados e testes. Os ZIPs instaláveis gerados localmente, áudios de terceiros, modelos e capturas não fazem parte do Git. Baixar apenas o código não fornece automaticamente todos os áudios do pacote local.
 
@@ -8,15 +8,15 @@ Tradução e narração para **WoW original 3.3.5a, build 12340**. O addon usa t
 
 Não é uma tradução completa do WoW. O pacote inicial 0.1.0 continha apenas a demonstração e uma saudação de McBride; a atualização Gornek acrescentou a fala capturada pelo jogador. Os procedimentos de geração básica abaixo continuam disponíveis; o novo recorte Durotar usa fontes e ferramentas adicionais descritas em `docs/INTEGRACAO-PACOTE-PTBR.md`.
 
-## Teste rápido: pacote atual 0.2.1
+## Teste rápido: pacote atual 0.3.0
 
 1. Feche o WoW completamente.
-2. Extraia `dist/AzerothVoz-0.2.1-Durotar-12340.zip`. Guarde uma cópia da pasta anterior antes de substituir **AzerothVoz** em `SuaPastaWoW/Interface/AddOns/`.
+2. Extraia `dist/AzerothVoz-0.3.0-Durotar-12340.zip`. Guarde uma cópia da pasta anterior antes de substituir **AzerothVoz** em `SuaPastaWoW/Interface/AddOns/`.
 3. O caminho final precisa ser `Interface/AddOns/AzerothVoz/AzerothVoz.toc`.
 4. Na seleção de personagens, ative AzerothVoz. Para o primeiro teste, desative outros addons de tradução/voz para evitar duas narrações ou disputa pelos textos.
 5. Entre no jogo e digite `/avoz demo`. Uma janela deve exibir a demonstração em português e a voz deve tocar. É um texto demonstrativo criado para este projeto.
 6. Digite `/avoz` para as configurações e teste o volume, ativar/desativar a voz e o botão Parar.
-7. Use `/avoz previa` para testar Dentes cortantes (788) ou abra uma das seis missões listadas em `docs/TESTE-DUROTAR-0.2.0.md` para testar a detecção automática. A saudação anterior de McBride também foi preservada.
+7. Use `/avoz previa` para testar Dentes cortantes (788) ou abra uma das onze missões listadas em `docs/TESTE-DUROTAR-0.2.0.md` para testar a detecção automática. A saudação anterior de McBride também foi preservada.
 
 O script `scripts/Instalar.ps1` original usa a saída antiga `dist/release`; para o teste atual, utilize o ZIP indicado acima. Nenhum script foi executado contra sua instalação do WoW.
 

@@ -1,0 +1,123 @@
+{
+  "quest_template": [
+    {
+      "ID": 792,
+      "LogTitle": "Vile Familiars",
+      "LogDescription": "Kill 8 Vile Familiars.$B$BReturn to Zureetha Fargaze outside the Den.",
+      "QuestDescription": "I trust the Valley of Trials will teach you much, young $c.$B$BI was sent to the Valley to guide you, but I have discovered a growing taint here...$B$BA group that calls itself the Burning Blade has a coven here in the Valley of Trials.  They are skulking in a cave to the northeast, and their Vile Familiars have spilled from its mouth to cause havoc.$B$BAs your first task against the Burning Blade, I bid you, defeat these familiars. Slay many and, if you survive, return to me."
+    },
+    {
+      "ID": 794,
+      "LogTitle": "Burning Blade Medallion",
+      "LogDescription": "Bring the Burning Blade Medallion to Zureetha Fargaze, outside The Den.",
+      "QuestDescription": "Through my divinations, I see that an item of power hides deep within the Burning Blade Coven, guarded by beasts and black magic.$B$BIt is called the Burning Blade Medallion, and your next task is to find it and remove it from the coven.$B$BBut be wary, for the medallion may be possessed by an agent of the Burning Blade, and if so then the agent's power would be greater than the familiars you have already encountered.$B$BGo, $N.  You will find the coven in a cave, to the north and west."
+    },
+    {
+      "ID": 805,
+      "LogTitle": "Report to Sen'jin Village",
+      "LogDescription": "Speak with Master Gadrin in Sen'jin Village.",
+      "QuestDescription": "Your trials against the Burning Blade are finished... here in the Valley.  But I want you to report your findings.$B$BGo to the troll village of Sen'jin and seek out Master Gadrin.  Sen'jin Village is east out of the valley, then right at the fork.$B$BTell Gadrin of the Burning Blade, and that they have reached the Valley of Trials.  Discover from him if they have yet reached Sen'jin.$B$BGo, $N, and be swift.  I fear the evil found in the Burning Blade Coven is but the herald of a larger threat..."
+    },
+    {
+      "ID": 5441,
+      "LogTitle": "Lazy Peons",
+      "LogDescription": "Use the Foreman's Blackjack on Lazy Peons when they're sleeping.  Wake up 5 peons, then return the Foreman's Blackjack to Foreman Thazz'ril in the Valley of Trials.",
+      "QuestDescription": "Cursed peons!  They work hard gathering lumber from the trees of the valley, but they're always taking naps!  I need someone to help keep the peons in line.$B$BYou look like the right $r for my task.  Here, you take this blackjack and use it on any lazy peons you find sleeping on the job.  A good smack will get them right back to work!  Return the blackjack when you're done.$B$BLousy slacking peons..."
+    },
+    {
+      "ID": 6394,
+      "LogTitle": "Thazz'ril's Pick",
+      "LogDescription": "Bring Thazz'ril's Pick to Foreman Thazz'ril.",
+      "QuestDescription": "$N, you are a dependable $r.  Can I count on you for another task?$B$BSome time ago I was surveying the cave to the north for minerals, and I left my favorite pick behind.  When I later returned to retrieve it I found the cave was filled with vicious beasts!  Will you go into the cave, the Burning Blade Coven, and get my pick?$B$BI left it in a chamber with waterfalls.  My pick has a spell on it so you can see it in the dark, so you won't have to worry about finding it... just what's guarding it!"
+    }
+  ],
+  "quest_offer_reward": [
+    {
+      "ID": 792,
+      "RewardText": "You have done well, $N.$b$bAlthough the Vile Familiars were merely pets of the darker powers within the Burning Blade, your success against them foretells greater deeds ahead."
+    },
+    {
+      "ID": 794,
+      "RewardText": "You retrieved it! Well done!$b$bYour efforts within the Burning Blade Coven are key in rooting out this cult in the Valley of Trials. But I fear they have further aims in our land.$b$bWe have not seen the end of them."
+    },
+    {
+      "ID": 805,
+      "RewardText": "Hm... your report comes at a bad time. The Burning Blade is not seen here in Sen'jin, but their evil has taken seed off the coast, on the Echo Isles.$b$bThe orcs are friends of the Darkspear Trolls. Honorable friends. We want to help the orcs, but... we need help too.$b"
+    },
+    {
+      "ID": 5441,
+      "RewardText": "Good. good. Maybe they'll think twice before slacking next time! Thanks for the help!"
+    },
+    {
+      "ID": 6394,
+      "RewardText": "Great, you got it! Thanks a lot, $N. This is my favorite pick! Now if my peons ever finish chopping down these trees, maybe we can find a nice cave to mine!"
+    }
+  ],
+  "quest_request_items": [
+    {
+      "ID": 792,
+      "CompletionText": "To prove yourself against the Burning Blade, you must first defeat its Vile Familiars. Return to me when you have done this."
+    },
+    {
+      "ID": 794,
+      "CompletionText": "Is your task complete, $N? Do you have the Burning Blade Medallion?"
+    },
+    {
+      "ID": 805,
+      "CompletionText": null
+    },
+    {
+      "ID": 5441,
+      "CompletionText": "No good lazy...$b$b Eh? Do you have my blackjack? Did you catch any peons sleeping on the job?!"
+    },
+    {
+      "ID": 6394,
+      "CompletionText": "Have you entered the Burning Blade Coven, $N? Did you find my pick?"
+    }
+  ],
+  "creature_queststarter": [
+    {
+      "id": 3145,
+      "quest": 792
+    },
+    {
+      "id": 3145,
+      "quest": 794
+    },
+    {
+      "id": 3145,
+      "quest": 805
+    },
+    {
+      "id": 11378,
+      "quest": 5441
+    },
+    {
+      "id": 11378,
+      "quest": 6394
+    }
+  ],
+  "creature_questender": [
+    {
+      "id": 3145,
+      "quest": 792
+    },
+    {
+      "id": 3145,
+      "quest": 794
+    },
+    {
+      "id": 3188,
+      "quest": 805
+    },
+    {
+      "id": 11378,
+      "quest": 5441
+    },
+    {
+      "id": 11378,
+      "quest": 6394
+    }
+  ],
+  "provenance": "AzerothCore azerothcore-wotlk/data/sql/base/db_world, local snapshot 2026-10-24; see docs/INTEGRACAO-PACOTE-PTBR.md"
+}

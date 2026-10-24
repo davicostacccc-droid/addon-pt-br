@@ -1,5 +1,5 @@
 -- Lua 5.1 / WoW 3.3.5a. No HTTP, file I/O or modern C_* APIs.
-AzerothVoz = { version = '0.2.1', index = {}, templates = {}, quests = {}, count = 0 }
+AzerothVoz = { version = '0.3.0', index = {}, templates = {}, quests = {}, count = 0 }
 local A = AzerothVoz
 
 function A.Normalize(text)

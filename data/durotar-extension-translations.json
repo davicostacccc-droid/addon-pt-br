@@ -1,0 +1,38 @@
+{
+  "quests": {
+    "792": {
+      "title": "Familiares vis",
+      "objectives": "Mate 8 Vile Familiars.\n\nVolte até Zureetha Fargaze, do lado de fora de The Den.",
+      "accept": "Confio que o Vale das Provações terá muito a lhe ensinar.\n\nFui enviada ao vale para orientar você, mas descobri uma corrupção que cresce por aqui...\n\nUm grupo que se autodenomina Burning Blade mantém um covil no Vale das Provações. Eles se escondem em uma caverna a nordeste, e seus familiares vis saíram de lá para causar destruição.\n\nComo sua primeira tarefa contra a Burning Blade, peço que derrote esses familiares. Mate muitos deles e, se sobreviver, volte até mim.",
+      "progress": "Para provar seu valor contra a Burning Blade, primeiro você precisa derrotar seus familiares vis. Volte até mim quando terminar.",
+      "complete": "Você se saiu bem, $n.\n\nEmbora os familiares vis fossem apenas animais de estimação dos poderes sombrios da Burning Blade, sua vitória anuncia feitos ainda maiores."
+    },
+    "794": {
+      "title": "Medalhão da Burning Blade",
+      "objectives": "Leve o Burning Blade Medallion a Zureetha Fargaze, do lado de fora de The Den.",
+      "accept": "Minhas adivinhações revelam um objeto de poder nas profundezas do Burning Blade Coven, protegido por feras e magia negra.\n\nEle se chama Burning Blade Medallion. Sua próxima tarefa é encontrá-lo e retirá-lo do covil.\n\nMas tenha cuidado: o medalhão pode estar com um agente da Burning Blade. Nesse caso, seu poder será maior que o dos familiares que você já enfrentou.\n\nVá, $n. Você encontrará o covil em uma caverna a noroeste.",
+      "progress": "Terminou sua tarefa, $n? Está com o Burning Blade Medallion?",
+      "complete": "Você conseguiu recuperá-lo! Muito bem!\n\nSeus esforços no Burning Blade Coven são fundamentais para eliminar este culto do Vale das Provações. Mas temo que eles tenham outros planos para nossas terras.\n\nAinda não vimos o fim deles."
+    },
+    "805": {
+      "title": "Apresente-se na vila de Sen'jin",
+      "objectives": "Fale com Master Gadrin na vila de Sen'jin.",
+      "accept": "Suas provações contra a Burning Blade terminaram... aqui no vale. Mas quero que você relate o que descobriu.\n\nVá até a vila dos trolls de Sen'jin e procure Master Gadrin. Saia do vale pelo leste e vire à direita na bifurcação para chegar à vila.\n\nConte a Gadrin sobre a Burning Blade e diga que eles chegaram ao Vale das Provações. Descubra com ele se também chegaram a Sen'jin.\n\nVá, $n, e seja rápido. Temo que o mal encontrado no Burning Blade Coven seja apenas o anúncio de uma ameaça maior...",
+      "complete": "Hum... seu relato chega em uma hora ruim. A Burning Blade não foi vista aqui em Sen'jin, mas seu mal criou raízes nas ilhas Echo, ao largo da costa.\n\nOs orcs são amigos dos trolls Darkspear. Amigos honrados. Queremos ajudar os orcs, mas... também precisamos de ajuda."
+    },
+    "5441": {
+      "title": "Peões preguiçosos",
+      "objectives": "Use o Foreman's Blackjack nos Lazy Peons enquanto estiverem dormindo. Acorde 5 peões e devolva o porrete a Foreman Thazz'ril, no Vale das Provações.",
+      "accept": "Malditos peões! Trabalham duro cortando as árvores do vale, mas vivem tirando uma soneca! Preciso de alguém para mantê-los na linha.\n\nVocê parece ideal para a tarefa. Tome este porrete e use-o nos peões preguiçosos que encontrar dormindo em serviço. Uma boa pancada vai colocá-los de volta ao trabalho! Devolva o porrete quando terminar.\n\nPeões folgados...",
+      "progress": "Preguiçosos imprestáveis...\n\nHã? Está com meu porrete? Pegou algum peão dormindo em serviço?!",
+      "complete": "Ótimo, ótimo. Quem sabe agora eles pensem duas vezes antes de enrolar! Obrigado pela ajuda!"
+    },
+    "6394": {
+      "title": "A picareta de Thazz'ril",
+      "objectives": "Leve Thazz'ril's Pick a Foreman Thazz'ril.",
+      "accept": "$n, você é alguém de confiança. Posso contar com você para outra tarefa?\n\nHá algum tempo, fui procurar minerais na caverna ao norte e deixei minha picareta favorita lá. Quando voltei para buscá-la, a caverna estava cheia de feras violentas! Você pode entrar no Burning Blade Coven e recuperar minha picareta?\n\nDeixei-a em uma câmara com cachoeiras. Ela tem um encantamento que permite enxergá-la no escuro. Encontrá-la não será o problema... o problema é o que está guardando ela!",
+      "progress": "Você entrou no Burning Blade Coven, $n? Encontrou minha picareta?",
+      "complete": "Ótimo, você conseguiu! Muito obrigado, $n. Esta é minha picareta favorita! Agora, se meus peões algum dia terminarem de cortar estas árvores, talvez possamos encontrar uma boa caverna para minerar!"
+    }
+  }
+}
