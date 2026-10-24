@@ -1,34 +1,39 @@
-# AzerothVoz PT-BR — protótipo 0.3.0
+# AzerothVoz PT-BR — 0.4.0-beta1 Kalimdor
 
-**Pacote local atual:** dist/AzerothVoz-0.3.0-Durotar-12340.zip. Preserva a interface 0.2.1 aprovada pelo jogador e amplia a cobertura para 11 missões, 30 etapas de missão e 14 novas falas geradas localmente. [Instalação e teste 0.3.0](docs/TESTE-0.3.0.md). A nova cobertura foi verificada automaticamente, mas ainda aguarda confirmação no cliente. Veja também a [análise da cópia Questie-335 fornecida pelo usuário](docs/ANALISE-QUESTIE.md).
+**Beta local:** `dist/AzerothVoz-0.4.0-beta1-Kalimdor-12340.zip`. Amplia a cobertura por regiões de Kalimdor com traduções importadas experimentalmente e narração local. Não cobre 100% das missões ou de todas as etapas. As contagens e lacunas estão em `COBERTURA.json` no pacote. [Instalação e teste da beta](docs/BETA-KALIMDOR.md). A versão ainda aguarda confirmação no cliente; as onze missões e gravações anteriores foram preservadas. A versão anterior continua disponível localmente em `dist/AzerothVoz-0.3.0-Durotar-12340.zip`.
 
-Este repositório contém código, ferramentas, textos revisados e testes. Os ZIPs instaláveis gerados localmente, áudios de terceiros, modelos e capturas não fazem parte do Git. Baixar apenas o código não fornece automaticamente todos os áudios do pacote local.
+Nesta compilação: **1.800 missões com ao menos uma etapa**, de 2.293 IDs selecionados; 675 têm todas as etapas de diálogo existentes na referência. Há 3.114 etapas distintas, 3.006 MP3s únicos e 493 IDs selecionados sem etapa traduzida. Os números não certificam a exatidão de cada tradução. Passaram 48 testes e 6.542 verificações de eventos em Lua 5.1; todos os MP3s foram decodificados e o ZIP conferido. O [resumo de verificação](data/beta-kalimdor-0.4.0-summary.json) registra cobertura e hash do ZIP local de aproximadamente 404 MB.
+
+Este repositório contém código, ferramentas, textos próprios revisados e testes. Os catálogos completos importados da beta, ZIPs instaláveis gerados localmente, áudios de terceiros, modelos e capturas não fazem parte do Git. Baixar apenas o código não fornece automaticamente todos os textos e áudios do pacote local. As traduções importadas da beta não foram todas revisadas manualmente e as novas vozes usam um timbre padrão compartilhado.
 
 Tradução e narração para **WoW original 3.3.5a, build 12340**. O addon usa textos e MP3 locais. O programa Python prepara os pacotes no Windows com Piper, um sintetizador neural que funciona offline depois do download inicial.
 
 Não é uma tradução completa do WoW. O pacote inicial 0.1.0 continha apenas a demonstração e uma saudação de McBride; a atualização Gornek acrescentou a fala capturada pelo jogador. Os procedimentos de geração básica abaixo continuam disponíveis; o novo recorte Durotar usa fontes e ferramentas adicionais descritas em `docs/INTEGRACAO-PACOTE-PTBR.md`.
 
-## Teste rápido: pacote atual 0.3.0
+## Teste rápido: beta Kalimdor
 
 1. Feche o WoW completamente.
-2. Extraia `dist/AzerothVoz-0.3.0-Durotar-12340.zip`. Guarde uma cópia da pasta anterior antes de substituir **AzerothVoz** em `SuaPastaWoW/Interface/AddOns/`.
+2. Extraia `dist/AzerothVoz-0.4.0-beta1-Kalimdor-12340.zip`. Guarde uma cópia da pasta anterior antes de substituir **AzerothVoz** em `SuaPastaWoW/Interface/AddOns/`.
 3. O caminho final precisa ser `Interface/AddOns/AzerothVoz/AzerothVoz.toc`.
 4. Na seleção de personagens, ative AzerothVoz. Para o primeiro teste, desative outros addons de tradução/voz para evitar duas narrações ou disputa pelos textos.
 5. Entre no jogo e digite `/avoz demo`. Uma janela deve exibir a demonstração em português e a voz deve tocar. É um texto demonstrativo criado para este projeto.
 6. Digite `/avoz` para as configurações e teste o volume, ativar/desativar a voz e o botão Parar.
-7. Use `/avoz previa` para testar Dentes cortantes (788) ou abra uma das onze missões listadas em `docs/TESTE-DUROTAR-0.2.0.md` para testar a detecção automática. A saudação anterior de McBride também foi preservada.
+7. Use `/avoz cobertura` para consultar o recorte instalado. Teste `/avoz previa 844`, `/avoz previa 747` ou `/avoz previa 456`; as prévias funcionam longe dos NPCs. Depois abra missões disponíveis normalmente para testar a detecção real. A saudação anterior de McBride também foi preservada.
 
 O script `scripts/Instalar.ps1` original usa a saída antiga `dist/release`; para o teste atual, utilize o ZIP indicado acima. Nenhum script foi executado contra sua instalação do WoW.
 
 ## Bases e cobertura
 
-A [análise consolidada das fontes](docs/FONTES-CONSOLIDADAS.md) reúne AzerothCore, Questie, WotLKDB, Cavern of Time, traduções e áudios. O cruzamento local identificou 2.952 IDs com candidatos a texto e alguma gravação; eles ainda exigem revisão e não representam cobertura instalada. A ferramenta 	ools/analyze_source_coverage.py reproduz o inventário sem executar código externo.
+A [análise consolidada das fontes](docs/FONTES-CONSOLIDADAS.md) reúne AzerothCore, Questie, WotLKDB, Cavern of Time, traduções e áudios. O cruzamento local identificou 2.952 IDs com candidatos a texto e alguma gravação; eles ainda exigem revisão e não representam cobertura instalada. A ferramenta `tools/analyze_source_coverage.py` reproduz o inventário sem executar código externo.
+
+A beta usa `tools/prepare_kalimdor_beta.py` para selecionar e filtrar os candidatos locais, `tools/build_kalimdor_beta.py` para sintetizar com cache preservando a 0.3.0, e `tools/verify_kalimdor_beta.py` para validar a entrega e criar o ZIP. O leitor `tools/read_lua_data.py` aceita somente tabelas literais; não executa os addons externos. Os comandos de geração básica abaixo continuam separados desse fluxo experimental.
 
 ## Comandos no jogo
 
 | Comando | Ação |
 |---|---|
 | `/avoz` | Abre configurações em Interface |
+| `/avoz cobertura` | Informa a cobertura parcial do pacote instalado |
 | `/avoz demo` | Mostra texto e reproduz a voz da demonstração |
 | `/avoz parar` | Para a narração e restaura o volume anterior |
 | `/avoz off` / `/avoz on` | Desativa / ativa o addon |

@@ -77,6 +77,8 @@ frame:SetScript('OnEvent', function(self, event, name)
                 A.db.extraWindow = input == 'janela on'
                 if A.current then A.UpdatePresentation(A.nativeFrame) end
             elseif input == 'exportar' then A.Export()
+            elseif input == 'cobertura' then
+                A.Message(A.packInfo or 'Consulte o LEIA-ME do pacote para conhecer sua cobertura.')
             elseif input == 'off' then A.db.enabled = false; Close()
             elseif input == 'on' then A.db.enabled = true
             else InterfaceOptionsFrame_OpenToCategory(A.options) end

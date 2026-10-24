@@ -2,7 +2,7 @@
 ## Title: AzerothVoz PT-BR
 ## Notes: Tradução e narração local para o cliente original 3.3.5a (12340).
 ## Author: Projeto AzerothVoz
-## Version: 0.3.0
+## Version: 0.4.0-beta1
 ## SavedVariables: AzerothVozDB, AzerothVozCaptures
 Core.lua
 Pack.lua

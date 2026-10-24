@@ -1,0 +1,20 @@
+{
+  "version": "0.4.0-beta1",
+  "selected_quests": 2293,
+  "quests_with_any_phase": 1800,
+  "quests_with_all_reference_phases": 675,
+  "distinct_quest_phases": 3114,
+  "quest_phase_records": 3271,
+  "imported_records": 3241,
+  "manual_review": "Imported text NOT fully manually reviewed; all-reference-phases means coverage, not certified accuracy.",
+  "quests_without_any_phase": 493,
+  "unit_tests": 48,
+  "lua_event_checks": 6542,
+  "decoded_unique_audio": 3006,
+  "zip_name": "AzerothVoz-0.4.0-beta1-Kalimdor-12340.zip",
+  "zip_bytes": 404318973,
+  "zip_sha256": "1afc9513858d3a1555a9e7ee9fee2eea49267d8be67bb8cc0eb18fad10b7625b",
+  "zip_verified": true,
+  "in_game": "PENDENTE de confirmacao do jogador",
+  "coverage_scope": "Kalimdor zones, selected instances and related class/event quests; reference snapshot, not a Warmane census"
+}

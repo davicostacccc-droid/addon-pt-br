@@ -73,7 +73,7 @@ function A.CreateUI()
     end)
     local note = options:CreateFontString(nil, 'OVERLAY', 'GameFontHighlight')
     note:SetPoint('TOPLEFT', 25, -250); note:SetWidth(480); note:SetJustifyH('LEFT')
-    note:SetText('A narração usa o canal Música e restaura o volume ao terminar.\n\n/avoz previa: ouvir uma missão do pacote\n/avoz exportar: copiar falas pendentes\n/avoz parar: interromper a fala\n/avoz repetir: repetir a fala atual\n/avoz janela on ou off: janela extra\n\nPacotes novos: instale com o jogo fechado. Cliente alvo: 3.3.5a / 12340.')
+    note:SetText('A narração usa o canal Música e restaura o volume ao terminar.\n\n/avoz previa: ouvir uma missão do pacote\n/avoz exportar: copiar falas pendentes\n/avoz parar: interromper a fala\n/avoz repetir: repetir a fala atual\n/avoz janela on ou off: janela extra\n/avoz cobertura: consultar a cobertura instalada\n\nBeta: textos importados podem ter erros; vozes novas usam uma voz padrão.\nPacotes novos: instale com o jogo fechado. Cliente alvo: 3.3.5a / 12340.')
     InterfaceOptions_AddCategory(options)
     A.options = options
 end

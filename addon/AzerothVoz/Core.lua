@@ -1,5 +1,5 @@
 -- Lua 5.1 / WoW 3.3.5a. No HTTP, file I/O or modern C_* APIs.
-AzerothVoz = { version = '0.3.0', index = {}, templates = {}, quests = {}, count = 0 }
+AzerothVoz = { version = '0.4.0-beta1', index = {}, templates = {}, resolved = {}, quests = {}, count = 0 }
 local A = AzerothVoz
 
 function A.Normalize(text)
@@ -29,19 +29,45 @@ function A.Register(record)
         local group = record.event .. ':' .. tostring(record.npc)
         A.templates[group] = A.templates[group] or {}
         table.insert(A.templates[group], record)
+        A.resolved[group] = nil
     end
 end
 
-function A.Lookup(event, npc, source)
-    for _, r in ipairs(A.index[A.Key(event, npc, source)] or {}) do
-        -- Hashes only select a bucket. A collision must never play another line.
-        if A.Normalize(r.source) == A.Normalize(source) then return r end
+function A.Lookup(event, npc, source, title)
+    npc = npc or 0
+    local normalized = A.Normalize(source)
+    local function Select(bucket, resolved)
+        local found
+        for _, r in ipairs(bucket or {}) do
+            local text = resolved and A.ResolveSource(r.source) or r.source
+            if A.Normalize(text) == normalized and
+                (not title or not r.sourceTitle or A.Normalize(title) == A.Normalize(r.sourceTitle)) then
+                -- Generic phrases shared by different quests must not select
+                -- an arbitrary translation. The English title can disambiguate.
+                if found and (found.questID ~= r.questID or found.translation ~= r.translation) then return nil, true end
+                found = r
+            end
+        end
+        return found, false
     end
-    -- Check only this NPC/event's templates, resolving known player markers.
-    -- Everything else must still match the entire English source text.
-    for _, r in ipairs(A.templates[event .. ':' .. tostring(npc)] or {}) do
-        if A.Normalize(A.ResolveSource(r.source)) == A.Normalize(source) then return r end
+    local found, ambiguous = Select(A.index[A.Key(event, npc, source)], false)
+    if found or ambiguous then return found end
+    local group = event .. ':' .. tostring(npc)
+    local context = table.concat({ UnitName('player') or '', UnitClass('player') or '',
+        UnitRace('player') or '', tostring(UnitSex('player')) }, '\001')
+    local cache = A.resolved[group]
+    if not cache or cache.context ~= context then
+        cache = { context = context, buckets = {} }
+        for _, r in ipairs(A.templates[group] or {}) do
+            local key = A.Key(event, npc, A.ResolveSource(r.source))
+            cache.buckets[key] = cache.buckets[key] or {}
+            table.insert(cache.buckets[key], r)
+        end
+        A.resolved[group] = cache
     end
+    -- Resolution is indexed once per speaker and player context, not scanned
+    -- across the whole beta catalog on each dialogue event.
+    return (Select(cache.buckets[A.Key(event, npc, source)], true))
 end
 
 function A.ResolveSource(text)
@@ -82,7 +108,19 @@ function A.Tokenize(text)
 end
 
 function A.Expand(text)
-    return (text or ''):gsub('%$[nN]', function() return UnitName('player') or 'aventureiro' end)
+    local classes = { warrior='guerreiro', paladin='paladino', hunter='caçador', rogue='ladino', priest='sacerdote',
+        deathknight='cavaleiro da morte', ['death knight']='cavaleiro da morte', shaman='xamã', mage='mago', warlock='bruxo', druid='druida' }
+    local races = { human='humano', orc='orc', dwarf='anão', ['night elf']='elfo noturno', undead='morto-vivo',
+        tauren='tauren', gnome='gnomo', troll='troll', ['blood elf']='elfo sangrento', draenei='draenei' }
+    text = (text or ''):gsub('%$[gG]([^:;]*):([^;]*);', function(male, female)
+        return UnitSex('player') == 3 and female or male
+    end)
+    return (text:gsub('%$([nNcCrR])', function(token)
+        token = string.lower(token)
+        if token == 'n' then return UnitName('player') or 'aventureiro' end
+        if token == 'c' then return classes[string.lower(UnitClass('player') or '')] or 'aventureiro' end
+        return races[string.lower(UnitRace('player') or '')] or 'aventureiro'
+    end))
 end
 
 function A.NpcID(guid)
@@ -153,7 +191,10 @@ function A.Capture(event, npc, text, title, questID)
 end
 
 function A.Handle(event, npc, source, title, questID)
-    if not A.db or not A.db.enabled or not npc or not source or source == '' then
+    local missingNPC = not npc
+    if not npc and (event == 'QUEST_DETAIL' or event == 'QUEST_PROGRESS' or event == 'QUEST_COMPLETE') then npc = 0 end
+    if not A.db or not A.db.enabled or not npc or not source or source == '' or
+        (missingNPC and not A.Lookup(event, 0, source, title)) then
         A.Stop(); A.current = nil
         if A.reader then A.reader:Hide() end
         if A.controls then A.controls:Hide() end
@@ -162,9 +203,9 @@ function A.Handle(event, npc, source, title, questID)
         return
     end
     local text = A.Tokenize(source)
-    local record = A.Lookup(event, npc, text) or A.Lookup(event, npc, source)
+    local record = A.Lookup(event, npc, text, title) or A.Lookup(event, npc, source, title)
     local key = A.Key(event, npc, text)
-    if A.current and A.current.key == key and A.current.source == text then return end
+    if A.current and A.current.key == key and A.current.source == text and A.current.record == record then return end
     A.Stop()
     if A.RestoreNative then A.RestoreNative() end
     A.current = { key = key, record = record, source = text, event = event }

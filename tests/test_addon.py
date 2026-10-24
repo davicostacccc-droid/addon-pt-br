@@ -265,6 +265,46 @@ class AddonTests(unittest.TestCase):
             assert(_cv.Sound_MusicVolume == '0.4' and AzerothVozDB.musicBefore == nil)
         """)
 
+    def test_beta_shared_text_requires_unambiguous_title(self):
+        self.run_lua("""
+            local a = AzerothVoz
+            a.Register({event='QUEST_PROGRESS',npc=197,questID=1,source='Do you have it?',sourceTitle='First',translation='Primeira'})
+            a.Register({event='QUEST_PROGRESS',npc=197,questID=2,source='Do you have it?',sourceTitle='Second',translation='Segunda'})
+            assert(not a.Lookup('QUEST_PROGRESS',197,'Do you have it?'))
+            assert(a.Lookup('QUEST_PROGRESS',197,'Do you have it?','Second').questID == 2)
+            assert(not a.Lookup('QUEST_PROGRESS',197,'Do you have it?','Other'))
+        """)
+
+    def test_beta_unbound_quest_only_matches_exact_source(self):
+        self.run_lua("""
+            local a = AzerothVoz
+            a.Register({event='QUEST_DETAIL',npc=0,questID=3,source='An item starts this task.',sourceTitle='Item quest',translation='Uma missão de item'})
+            a.Handle('QUEST_DETAIL',nil,'An item starts this task.','Item quest')
+            assert(a.current and a.current.record.questID == 3)
+            a.Handle('QUEST_DETAIL',nil,'Another task.','Item quest')
+            assert(not a.current)
+            assert(not a.Lookup('QUEST_DETAIL',197,'An item starts this task.','Item quest'))
+        """)
+
+    def test_beta_resolved_cache_updates_player_context_and_new_records(self):
+        self.run_lua(r"""
+            local a = AzerothVoz
+            a.Register({event='QUEST_DETAIL',npc=197,questID=4,source='Hello $N.$B$c',translation='Olá'})
+            assert(a.Lookup('QUEST_DETAIL',197,'Hello Teste.\nWarrior').questID == 4)
+            local previous = a.resolved['QUEST_DETAIL:197']
+            assert(a.Lookup('QUEST_DETAIL',197,'Hello Teste.\nWarrior'))
+            assert(previous == a.resolved['QUEST_DETAIL:197'])
+            local old = UnitName
+            UnitName = function(u) if u == 'player' then return 'Nova' else return old(u) end end
+            assert(a.Lookup('QUEST_DETAIL',197,'Hello Nova.\nWarrior'))
+            assert(not a.Lookup('QUEST_DETAIL',197,'Hello Teste.\nWarrior'))
+            a.Register({event='QUEST_DETAIL',npc=197,questID=5,source='Bye $N.',translation='Até logo'})
+            assert(a.Lookup('QUEST_DETAIL',197,'Bye Nova.').questID == 5)
+            assert(a.Expand('$n, $c $r.') == 'Nova, guerreiro orc.')
+            UnitSex = function() return 3 end
+            assert(a.Expand('viv$go:a;') == 'viva')
+        """)
+
     def test_wrong_build_does_not_enable_events(self):
         self.run_lua("""
             _build = '99999'
