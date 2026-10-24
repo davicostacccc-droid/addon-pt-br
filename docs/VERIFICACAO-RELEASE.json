@@ -1,0 +1,18 @@
+{
+  "lua": "Lua 5.1",
+  "records": 3,
+  "unique_audio": [
+    {
+      "audio": "7bed26892b69824f0ed210d7be54423ed3028779f6b9a75db5b9828bf473710a.mp3",
+      "seconds": 9.741,
+      "rms": 4893.2
+    },
+    {
+      "audio": "eaf91bf4f4086a973be06ea220ce74031cfad4e4d6580807977fcd304da0af13.mp3",
+      "seconds": 6.281,
+      "rms": 5260.63
+    }
+  ],
+  "zip_verified": true,
+  "in_game": "PENDENTE — confirmação do jogador"
+}

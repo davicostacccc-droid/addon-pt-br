@@ -1,0 +1,10 @@
+## Interface: 30300
+## Title: AzerothVoz PT-BR
+## Notes: Tradução e narração local para o cliente original 3.3.5a (12340).
+## Author: Projeto AzerothVoz
+## Version: 0.2.1
+## SavedVariables: AzerothVozDB, AzerothVozCaptures
+Core.lua
+Pack.lua
+UI.lua
+Events.lua

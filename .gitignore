@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+models/
+cache/
+dist/
+research/
+local-captures/
+*.part
+*.log
+.env
+.env.*
+*.pem
+*.key

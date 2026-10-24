@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "quests": {
+    "4641": {
+      "title": "Seu lugar no mundo",
+      "objectives": "Fale com Gornek no Covil (The Den), a oeste. Kaltunk marcou a localização dele no seu mapa.",
+      "accept": "Finalmente você tem idade, $n... idade para lutar em nome da Horda e conquistar glória para o Chefe Guerreiro.\n\nSim...\n\n<Kaltunk examina você.>\n\nVocê vai se sair bem.\n\nSem dúvida você quer encontrar um grande dragão ou demônio e estrangulá-lo com as próprias mãos, mas talvez seja mais sábio começar com algo menos... perigoso.\n\n<Kaltunk ri.>\n\nApresente-se a Gornek. Ele poderá lhe dar uma tarefa mais adequada a um jovem aventureiro. Você o encontrará no Covil, a oeste.",
+      "complete": "Mais um dos recrutas de Kaltunk, hein?\n\nEstamos em maus lençóis se isso é o melhor que a Horda consegue produzir. Mas não importa. Quando acharmos que você está pronto para deixar o Vale, será um orgulhoso aventureiro da Horda."
+    },
+    "788": {
+      "title": "Dentes cortantes",
+      "objectives": "Mate 8 javalis mosqueados (Mottled Boar) e volte a falar com Gornek no Covil (The Den).",
+      "accept": "A primeira coisa a fazer será dar um pouco de firmeza à sua espinha. Eu poderia mandar você aos Sertões (The Barrens) para caçar kodos, mas, para ser sincero, você nos é mais útil vivo do que morto.\n\nAcredito que os javalis mosqueados ao norte daqui serão adversários à sua altura.",
+      "progress": "Espero que você não tenha voltado para tentar me convencer de que terminou sua tarefa, $n. Não, é claro que não. Eu espero mais de você.",
+      "complete": "Hum, nada mal, $n. Mas não deixe isso subir à cabeça... durante sua jornada você enfrentará coisas mais difíceis que javalis.\n\nMesmo assim, você provou seu valor. Sua próxima provação será contra um adversário consideravelmente mais perigoso, então vai precisar de proteção extra."
+    },
+    "789": {
+      "title": "A ferroada do escorpídeo",
+      "objectives": "Leve 8 caudas de escorpídeo trabalhador (Scorpid Worker Tail) a Gornek no Covil (The Den).",
+      "accept": "Tanto guerreiros poderosos quanto novatos desajeitados já caíram diante da ferroada venenosa dos escorpídeos. Você encontrará muitos deles a noroeste daqui. Traga oito caudas como prova de sua habilidade em combate.\n\nO antídoto para a ferroada é feito do próprio veneno extraído dos ferrões. Mantemos bastante antídoto à mão para tratar jovens aventureiros como você...\n\nMas tenho certeza de que você não vai precisar disso, não é?",
+      "progress": "A carapaça de um escorpídeo não é grossa o bastante para deter a força de um guerreiro determinado. Ataque com força e sem hesitar, e os escorpídeos serão presas fáceis.",
+      "complete": "Há uma lição importante a aprender ao enfrentar escorpídeos. Até o menor dos adversários pode levar você à morte, assim como o maior. Em um combate feroz, muitas coisas podem causar sua derrota.\n\nNão tenho mais nada a lhe ensinar, $n. Você se saiu bem e acompanharei seu progresso com interesse."
+    },
+    "790": {
+      "title": "Sarkoth",
+      "objectives": "Mate Sarkoth e leve a garra dele de volta a Hana'zua.",
+      "accept": "Aventureiro! Pensei que morreria aqui sem que ninguém soubesse. Enquanto caçava os escorpídeos do Vale, encontrei um que parecia especialmente feroz. Atirei-me contra ele e consegui acertar um golpe forte em sua garra antes que ela se fechasse em minha perna.\n\nMas eu não estava preparado para o ferrão. Ele atingiu meu peito, rasgando minha carne e fazendo meu sangue correr. Por favor, mate esse escorpídeo por mim! Minha honra precisa ser defendida! Eu o enfrentei no planalto ao sul.",
+      "progress": "Ah... meu pai sempre disse que eu não seria grande coisa. Agora, deitado sob uma árvore enquanto a vida se esvai, temo que ele estivesse certo.\n\nPelo menos quero morrer sabendo que meu último inimigo também está morto.",
+      "complete": "Meu golpe não bastou para matá-lo, mas ver o estrago que causei me dá um pouco de orgulho. Esse pequeno orgulho será tudo que me restará para me sustentar se eu morrer. Pensando assim, a curta lista de realizações da minha vida me enche de raiva."
+    },
+    "804": {
+      "title": "Sarkoth",
+      "objectives": "Conte a Gornek, no Covil (The Den), o que aconteceu com Hana'zua.",
+      "accept": "Ver o que você fez por mim fortalece meu coração. Não posso cair tão facilmente! Preciso resistir!\n\nMas ainda não consigo voltar ao Covil sem ajuda. Por favor, $n, volte e conte a Gornek como estou. Talvez ele possa me ajudar.",
+      "complete": "Pela descrição da fera, acredito que você esteja falando de Sarkoth! Não é de admirar que Hana'zua tenha sido derrotado. Enviaremos ajuda imediatamente. Não se preocupe mais com a situação dele.\n\nMas devo dizer que fiquei impressionado ao saber que você matou Sarkoth. É um feito do qual pode se orgulhar, $n. E lutar pela honra de um desconhecido, mesmo tendo outras tarefas a cumprir, torna sua própria honra ainda maior."
+    },
+    "4402": {
+      "title": "A surpresa de sabra de Galgar",
+      "objectives": "Leve 6 maçãs de cacto (Cactus Apple), também chamadas de sabras, a Galgar. Elas crescem perto dos cactos.",
+      "accept": "Faz mesmo muito calor aqui no Vale das Provações.\n\n<Galgar enxuga a testa.>\n\nSe eu tivesse algumas sabras, poderia preparar minha famosa surpresa de sabra! Nada refresca mais rápido do que um pedaço dessa delícia.\n\nVamos combinar uma coisa, $n. Se você me trouxer 6 sabras, farei algumas porções para você levar em suas aventuras. Se tiver interesse, encontrará essas maçãs de cacto perto dos cactos que crescem por aqui.",
+      "progress": "Você já terminou de colher as sabras?",
+      "complete": "Maravilha, $n! Como prometido, aqui está sua surpresa de sabra, com uma coisinha extra."
+    }
+  },
+  "audio_overrides": {
+    "789-accept": "Sintetizar localmente: a transcrição do áudio do pacote indica dez caudas; a fonte inglesa consultada exige oito.",
+    "788-progress": "Sintetizar localmente: não foi encontrado áudio desta etapa no pacote."
+  }
+}

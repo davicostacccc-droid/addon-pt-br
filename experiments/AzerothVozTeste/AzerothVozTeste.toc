@@ -1,0 +1,7 @@
+## Interface: 30300
+## Title: AzerothVoz - Teste de vozes do patch
+## Notes: Duas amostras locais para testar no cliente 3.3.5a build 12340.
+## Version: 0.1.0
+## SavedVariables: AzerothVozTesteDB
+Samples.lua
+Core.lua

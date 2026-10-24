@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "language": "pt-BR",
+  "lines": [
+    {
+      "event": "GOSSIP_SHOW",
+      "npc": 3143,
+      "source": "The Valley of Trials will temper even the weakest into a warrior worthy to join the Horde. Those who cannot rise to its tests will be left to bake in the scorching desert sun.",
+      "title": "Gornek",
+      "locale": "enUS",
+      "translation": "O Vale das Provações forjará até os mais fracos em guerreiros dignos de se juntar à Horda. Aqueles que não superarem suas provações serão deixados para torrar sob o sol escaldante do deserto.",
+      "note": "Captura enviada pelo jogador em 24/10/2026. Tradução revisada para o pacote; áudio e correspondência no jogo ainda aguardam confirmação."
+    }
+  ]
+}

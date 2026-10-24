@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "language": "pt-BR",
+  "lines": [
+    {
+      "event": "DEMO", "npc": 0,
+      "source": "Welcome to Azeroth.",
+      "title": "Bem-vindo ao AzerothVoz",
+      "translation": "Bem-vindo a Azeroth, aventureiro! A partir de agora, você poderá acompanhar as histórias em português brasileiro. Esta é uma demonstração de voz gerada localmente por inteligência artificial.",
+      "note": "Texto original do projeto; demonstração, não é fala oficial de um NPC."
+    },
+    {
+      "event": "GOSSIP_SHOW", "npc": 197,
+      "source": "Hey, citizen! You look like a stout one. We guards are spread a little thin out here, and I could use your help...",
+      "title": "Marshal McBride — Northshire",
+      "translation": "Ei, cidadão! Você parece ter disposição. Temos poucos guardas por aqui, e uma ajuda sua seria muito bem-vinda...",
+      "note": "Tradução própria. Texto identificado em gossipToVoice.lua do QuestVoice; pontuação conferida na referência pública do personagem. Validar a variante no servidor."
+    },
+    {
+      "event": "QUEST_GREETING", "npc": 197,
+      "source": "Hey, citizen! You look like a stout one. We guards are spread a little thin out here, and I could use your help...",
+      "title": "Marshal McBride — Northshire",
+      "translation": "Ei, cidadão! Você parece ter disposição. Temos poucos guardas por aqui, e uma ajuda sua seria muito bem-vinda...",
+      "note": "Mesma fala na janela clássica de saudação de missões."
+    }
+  ]
+}

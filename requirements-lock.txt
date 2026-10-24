@@ -1,0 +1,9 @@
+flatbuffers==25.12.19
+imageio-ffmpeg==0.6.0
+lupa==2.6
+numpy==2.5.4
+onnxruntime==1.31.0
+packaging==26.3
+pathvalidate==3.3.1
+piper-tts==1.4.2
+protobuf==7.36.2
